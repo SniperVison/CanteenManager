@@ -39,19 +39,18 @@ public class ShiroRealm extends AuthorizingRealm {
         String username = token.getUsername();
         Object password = String.valueOf(token.getPassword());
         UserPO userPO = userService.getByUsername(username);
-        log.warn(userPO +"");
         if (userPO == null) {
             log.error("账户不存在");
-            throw new UnknownAccountException("账户不存在！");
+            throw new UnknownAccountException("用户名或密码错误！");
         } else if (userPO != null
                 && !userPO.getPassword().equals(password)
                 && userPO.getStatus() != UserStatus.LOCKED) {
-            log.error("密码不正确");
-            throw new IncorrectCredentialsException("密码不正确！");
+            log.info("密码不正确");
+            throw new IncorrectCredentialsException("用户名或密码错误！");
         } else if (userPO != null
                 && userPO.getPassword().equals(password)
                 && userPO.getStatus() == UserStatus.LOCKED) {
-            log.error("账户被锁定");
+            log.info("账户被锁定");
             throw new LockedAccountException("账户被锁定！");
         } else {
             //当前realm对象的name，调用父类的getName（）即可

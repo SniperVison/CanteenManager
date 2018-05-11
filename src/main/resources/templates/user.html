@@ -87,16 +87,12 @@
                                 <label for="ustatus" class="col-sm-2 control-label col-sm-offset-2">状态</label>
                                 <div class="col-sm-4">
                                     <select class="selectpicker form-control " id="ustatus" name="ustatus">
-                                        <option value="未认证"
-                                                data-content="<span class='badge badge-pill badge-info' style='background-color: #17a2b8; color: #fff;'>未认证</span>">
-                                            未认证
+                                        <option value="有效" data-content="<span class='badge badge-pill badge-success'
+                                        style='background-color: #28a745; color: #fff;'>有效</span>">有效
                                         </option>
-                                        <option value="已认证" data-content="<span class='badge badge-pill badge-success'
-                                        style='background-color: #28a745; color: #fff;'>已认证</span>">已认证
-                                        </option>
-                                        <option value="被锁定" data-content="<span class='badge badge-pill badge-warning'
-                                        style='background-color: #ffc107; color: #212529;;'>被锁定</span>">
-                                            被锁定
+                                        <option value="锁定" data-content="<span class='badge badge-pill badge-warning'
+                                        style='background-color: #ffc107; color: #212529;;'>锁定</span>">
+                                            锁定
                                         </option>
                                     </select>
                                 </div>
@@ -189,9 +185,8 @@
 
     //状态栏格式化
     function statusFormatter(value, row, index) {
-        if (value == '未认证') return '<span class="badge badge-pill badge-info" style="background-color: #17a2b8; color: #fff;">未认证</span>';
-        if (value == '已认证') return '<span class="badge badge-pill badge-success" style="background-color: #28a745; color: #fff;">已认证</span>';
-        if (value == '被锁定') return '<span class="badge badge-pill badge-warning" style="background-color: #ffc107; color: #212529;;">被锁定</span>';
+        if (value == '有效') return '<span class="badge badge-pill badge-success" style="background-color: #28a745; color: #fff;">有效</span>';
+        if (value == '锁定') return '<span class="badge badge-pill badge-warning" style="background-color: #ffc107; color: #212529;;">锁定</span>';
     }
 
     //角色栏格式化

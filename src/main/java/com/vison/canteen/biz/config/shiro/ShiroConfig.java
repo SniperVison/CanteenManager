@@ -4,7 +4,9 @@ package com.vison.canteen.biz.config.shiro;
 import com.vison.canteen.core.service.PermissionInitService;
 import com.vison.canteen.core.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -75,12 +77,14 @@ public class ShiroConfig {
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>() {
             {
-//                List<PermissionInitPO> permissionInitPOList = permissionInitService.selectAll();
-//                for (PermissionInitPO permissionInitPO : permissionInitPOList) {
-//                    put(permissionInitPO.getUrl(), permissionInitPO.getPermissionInit());
-//                }
+
                 put("/static/**", "anon");
+                put("/swagger-ui.html", "anon");
+                put("/swagger-resources", "anon");
+                put("/v2/api-docs", "anon");
+                put("/webjars/springfox-swagger-ui/**", "anon");
                 put("/register/**", "anon");
+                put("/druid/**", "anon");
                 put("/kaptcha/**", "anon");
                 put("/ajax-login", "anon");
                 put("/user/list", "roles[admin]");
@@ -173,28 +177,23 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
+    @Bean(name = "hashedCredentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        credentialsMatcher.setHashAlgorithmName("MD5");
+        credentialsMatcher.setHashIterations(256);
+        credentialsMatcher.setStoredCredentialsHexEncoded(true);
+        return credentialsMatcher;
+    }
 
-//    @Bean(name = "lifecycleBeanPostProcessor")
-//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-//        return new LifecycleBeanPostProcessor();
-//    }
-
-//    @Bean(name = "hashedCredentialsMatcher")
-//    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-//        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-//        credentialsMatcher.setHashAlgorithmName("MD5");
-//        credentialsMatcher.setHashIterations(2);
-//        credentialsMatcher.setStoredCredentialsHexEncoded(true);
-//        return credentialsMatcher;
-//    }
-
-//    @Bean(name = "shiroRealm")
-////    @DependsOn("lifecycleBeanPostProcessor")
-//    public ShiroRealm shiroRealm() {
-//        ShiroRealm realm = new ShiroRealm();
-////        realm.setCredentialsMatcher(hashedCredentialsMatcher());
-//        return realm;
-//    }
+    public static void main(String[] args) {
+        String algorithmName = "MD5";
+        String source = "123";
+        String salt = "abc";
+        int hashIterations = 256;
+        SimpleHash simpleHash = new SimpleHash(algorithmName, source, salt, hashIterations);
+        System.out.println(simpleHash.toString());
+    }
 
 
 }

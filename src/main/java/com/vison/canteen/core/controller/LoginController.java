@@ -1,5 +1,6 @@
 package com.vison.canteen.core.controller;
 
+import com.vison.canteen.biz.util.MD5Utils;
 import com.vison.canteen.core.bean.PO.UserPO;
 import com.vison.canteen.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,19 +56,11 @@ public class LoginController {
                                            @RequestParam("password") String password,
                                            @RequestParam("rememberMe") Boolean rememberMe) {
         LinkedHashMap<String, Object> resultMap = new LinkedHashMap<>();
-        /*HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        String gifCode = (String) session.getAttribute("_code");
-        if (!code.equals(gifCode)) {
-            resultMap.put("status", 201);
-            resultMap.put("message", "验证码错误");
-            return resultMap;
-        }*/
         Subject currentUser = SecurityUtils.getSubject();
-        log.error(currentUser + "");
-        log.warn(currentUser.isAuthenticated() + "");
         //没有登录认证，执行登录
         if (!currentUser.isAuthenticated()) {
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            String newPassword = MD5Utils.encrypt(username, password);
+            UsernamePasswordToken token = new UsernamePasswordToken(username,newPassword);
             token.setRememberMe(rememberMe);
             try {
                 currentUser.login(token);
@@ -77,11 +70,11 @@ public class LoginController {
             } catch (UnknownAccountException uae) {
                 log.error("用户名错误, username = [{}]", username);
                 resultMap.put("status", 501);
-                resultMap.put("message", "用户名不存在");
+                resultMap.put("message", "用户名或密码错误");
             } catch (IncorrectCredentialsException ice) {
                 log.error("密码错误, password = [{}]", password);
                 resultMap.put("status", 502);
-                resultMap.put("message", "密码错误");
+                resultMap.put("message", "用户名或密码错误");
             } catch (LockedAccountException lae) {
                 log.error("账户被锁定, [{}]", token.getPrincipal());
                 resultMap.put("status", 503);
@@ -99,12 +92,7 @@ public class LoginController {
         }
     }
 
-    //    @PostMapping("logout")
-//    public String logoutView(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        session.invalidate();
-//        return "redirect:/";
-//    }
+
     @PostMapping("logout")
     public String logoutView(HttpServletRequest request, HttpServletResponse response) {
         UserPO subject = (UserPO) SecurityUtils.getSubject();

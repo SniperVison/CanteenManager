@@ -1,6 +1,7 @@
 package com.vison.canteen.core.controller;
 
 import com.vison.canteen.biz.enums.UserStatus;
+import com.vison.canteen.biz.util.MD5Utils;
 import com.vison.canteen.core.bean.PO.UserPO;
 import com.vison.canteen.core.exception.CanteenException;
 import com.vison.canteen.core.service.UserService;
@@ -38,8 +39,8 @@ public class RegisterController {
             UserPO user = new UserPO();
             user.setEmail(email);
             user.setUsername(username);
-            user.setPassword(password);
-            user.setStatus(UserStatus.UNCERTIFIED);
+            user.setPassword(MD5Utils.encrypt(username, password));
+            user.setStatus(UserStatus.CERTIFIED);
             Boolean flag = userService.addUser(user);
             if (flag) {
                 resultMap.put("status", 200);

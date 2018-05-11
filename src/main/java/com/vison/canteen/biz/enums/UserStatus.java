@@ -15,9 +15,8 @@ import java.io.Serializable;
 public enum UserStatus implements IEnum {
 
     //状态(0代表创建未认证, 1代表正常状态， 2代表锁定状态)
-    UNCERTIFIED(0, "未认证"),
-    CERTIFIED(1, "已认证"),
-    LOCKED(2, "被锁定");
+    CERTIFIED(1, "有效"),
+    LOCKED(2, "锁定");
 
     private int status;
     private String statusName;
