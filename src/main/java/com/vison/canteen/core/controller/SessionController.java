@@ -1,14 +1,13 @@
 package com.vison.canteen.core.controller;
 
+import com.vison.canteen.biz.bean.ResponseDTO;
 import com.vison.canteen.biz.bean.UserOnline;
 import com.vison.canteen.core.bean.PO.UserPO;
 import com.vison.canteen.core.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +37,20 @@ public class SessionController {
     @PostMapping("list")
     public List<UserOnline> list(HttpServletRequest request, HttpServletResponse response) {
         return sessionService.list();
+    }
+
+
+    @RequiresPermissions("user:kickout")
+    @PostMapping("forceLogout")
+    public ResponseDTO forceLogout(String id) {
+        try {
+            sessionService.forceLogout(id);
+            return ResponseDTO.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.error("踢出用户失败");
+        }
+
     }
 
 }

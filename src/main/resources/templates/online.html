@@ -115,8 +115,8 @@
                     field: 'status',
                     title: '状态',
                     formatter: function (value, row, index) {
-                        if (value == '1') return '<span class="badge badge-success">在线</span>';
-                        if (value == '0') return '<span class="badge badge-danger">离线</span>';
+                        if (value == '1') return '<span class="badge badge-pill badge-success" style="background-color: #28a745; color: #fff;">在线</span>';
+                        if (value == '0') return '<span class="badge badge-pill badge-warning" style="background-color: #ffc107; color: #212529;;">离线</span>';
                     }
                 }, {
                     title: '操作',
@@ -140,10 +140,45 @@
     function errorFunction() {
         alert("加载失败");
     }
+
+
+    function offline(id, status, username) {
+        if (status == "0") {
+            swal({
+                title: "提示",
+                text: "该用户已是离线状态！！",
+                type: "warning",
+                timer: 2000
+            });
+            return;
+        }
+        if (username =="${user.username}") {
+            location.href = "${ctxPath}/logout";
+        }
+        $.post("${ctxPath}/session/forceLogout", {"id": id}, function (r) {
+            if (r.code == 200) {
+                swal({
+                    title: "提示",
+                    text: "该用户已强制下线！",
+                    type: "success",
+                    timer: 2000
+                });
+                $("#onlineTable").bootstrapTable("refresh", {
+                    url: "${ctxPath}/session/list"
+                });
+            } else {
+                swal({
+                    title: "提示",
+                    text: r.msg,
+                    type: "error",
+                    timer: 2000
+                });
+            }
+        }, "json");
+    }
 </script>
 
 <!-- Custom Theme Scripts -->
 <script src="${ctxPath}/static/common/js/custom.min.js"></script>
-<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
 </body>
 </html>
