@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+
+    <title>高校食堂管理系统</title>
+
+    <!-- Bootstrap -->
+    <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 字体样式-->
+    <link href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style 自定义样式-->
+    <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+    <!--sweetAlert-->
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+    <!--autocomplete-->
+    <link href="${ctxPath}/static/plugins/autocomplete/autocomplete.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/autocomplete/autocomplete.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!--highcharts-->
+    <script src="${ctxPath}/static/plugins/highchart/highcharts.js"></script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!--边框导航栏-->
+        <%
+        include("common/aside.html"){}
+        %>
+        <!--顶部-->
+        <%
+        include("common/top.html"){}
+        %>
+        <!--网页主体内容-->
+        <div class="right_col" role="main">
+            <form role="form" class="col-md-offset-3">
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">查询城市:</label>
+                    <div class="col-md-3">
+                        <input id="city" type="text" class="form-control" placeholder="城市名"/>
+                    </div>
+                    <input type="text" id="areaId" autocomplete="" hidden/>
+                    <button id="search" type="button" class="btn btn-success btn-sm">搜索</button>
+                </div>
+            </form>
+            </br>
+            <div style="display:inline">
+                <div id="container1" style="width:49%;min-height:0px;display:inline-block;margin-left: 10px"></div>
+                <div id="container2" style="width:49%;min-height:0px;display:inline-block"></div>
+            </div>
+            </br>
+            <div style="display:inline">
+                <div id="container3" style="width:100%;min-height:0px;display:inline-block">
+                </div>
+                <div id="container4" style="width:100%;min-height:0px;display:inline-block">
+                </div>
+                <div id="container5" style="width:100%;min-height:0px;display:inline-block">
+                </div>
+                <div id="container6" style="width:100%;min-height:0px;display:inline-block">
+                </div>
+            </div>
+
+        </div>
+
+        <!--底部-->
+        <%
+        include("common/footer.html"){}
+        %>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    //读取json文件获取对应的id
+    $("#city").change(function () {
+        $.getJSON("${ctxPath}/static/file/city.json", function (r) {
+            var data = r.filter(function (e) {
+                return e.countyname == $("#city").val();
+            });
+            var areaid = data[0].areaid;
+            $("#areaId").attr("value", areaid);
+        });
+    });
+
+    $("#search").click(function () {
+        var areaId = $("#areaId").val();
+        console.log(areaId);
+        if (areaId != null || areaId != "" || areaId.length > 0) {
+            $.post("${ctxPath}/weather/query", {"areaId": areaId}, function (r) {
+                if (r.code == 200) {
+                    console.log(r.msg);
+                    var data = JSON.parse(r.msg);
+                    var countyName = data.value[0].city;
+                    var weathers = data.value[0].weathers;
+                    var day_c = new Array();
+                    var night_c = new Array();
+                    var dateArr = new Array();
+                    // console.log(data);
+                    // console.log(countyName);
+                    // console.log(weathers);
+                    for (var i = 0; i < weathers.length; i++) {
+                        if (i == weathers.length - 1) {
+                            day_c.unshift(parseFloat(weathers[i].temp_day_c));
+                            night_c.unshift(parseFloat(weathers[i].temp_night_c));
+                            dateArr.unshift(weathers[i].date.split("-")[1] + "-" + weathers[i].date.split("-")[2]);
+                        } else {
+                            day_c.push(parseFloat(weathers[i].temp_day_c));
+                            night_c.push(parseFloat(weathers[i].temp_night_c));
+                            dateArr.push(weathers[i].date.split("-")[1] + "-" + weathers[i].date.split("-")[2]);
+                        }
+                    }
+                    var weather3HoursDetailsInfos = data.value[0].weatherDetailsInfo.weather3HoursDetailsInfos;
+                    var publishTime = data.value[0].weatherDetailsInfo.publishTime;
+                    var timeArr = new Array();
+                    var hours_c = new Array();
+                    for (var i = 0; i < weather3HoursDetailsInfos.length; i++) {
+                        var time = weather3HoursDetailsInfos[i].endTime.split(" ")[1].split(":")
+                        hours_c.push(parseFloat(weather3HoursDetailsInfos[i].highestTemperature));
+                        timeArr.push(time[0] + ":" + time[1]);
+                    }
+                    var chart = Highcharts.chart('container1', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: countyName + '七天气温图',
+                            style: {
+                                'font-size': '1.1rem',
+                                'color': '#888'
+                            }
+                        },
+                        xAxis: {
+                            categories: dateArr
+                        },
+                        yAxis: {
+                            title: {
+                                text: '°C',
+                                align: 'high',
+                                rotation: 0
+                            }
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            spline: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: true
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            type: 'spline',
+                            color: '#FFC77F',
+                            name: '高温',
+                            data: day_c
+                        }, {
+                            type: 'spline',
+                            color: '#C5F0A4',
+                            name: '低温',
+                            data: night_c
+                        }]
+                    });
+
+                    var chart = Highcharts.chart('container2', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: countyName + '今天气温细节',
+                            style: {
+                                'font-size': '1.1rem',
+                                'color': '#888'
+                            }
+                        },
+                        xAxis: {
+                            categories: timeArr
+                        },
+                        yAxis: {
+                            title: {
+                                text: '°C',
+                                align: 'high',
+                                rotation: 0
+                            }
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            spline: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: true
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            type: 'spline',
+                            color: '#A1D9FF',
+                            name: '气温',
+                            data: hours_c
+                        }]
+                    });
+
+                    var realtime = data.value[0].realtime;
+                    var detailHtml = '</br><div class="container">' +
+                        '<h2 class="title">当前天气</h2>' +
+                        '</div>' +
+                        '<div class="" style=" flex: 1 1 auto; padding: 1.7rem 2.1rem">' +
+                        '<ul class="box" style = "list-style: none;padding: 0;margin: 0; float: left">' +
+                        '<li>天气：' + realtime.weather + '</li>' +
+                        '<li>风向：' + realtime.wD + '</li>' +
+                        '<li>风力大小：' + realtime.wS + '</li>' +
+                        '<li>温度：' + realtime.temp + '℃</li>' +
+                        '<li>体感温度：' + realtime.sendibleTemp + '℃</li>' +
+                        '<li>空气湿度百分比：' + realtime.sD + '%</li>' +
+                        '<li>更新时间：' + realtime.time + '</li>' +
+                        '</ul>' +
+                        '</div>';
+                    $("#container3").html("").append(detailHtml);
+
+                    var weathersHtml = '</br><div class="container">' +
+                        '<h2 class="title">未来天气</h2>' +
+                        '</div>' +
+                        '<div class="" style=" flex: 1 1 auto; padding: 1.7rem 2.1rem">' +
+                        '<ul class="box" style = "list-style: none;padding: 0;margin: 0;">' +
+                        '<li style="width:100%">' + weathers[6].date + '【' + weathers[6].week + '】：日出时间---' + weathers[6].sun_rise_time + '      日落时间---' + weathers[6].sun_down_time + '      天气---' + weathers[6].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[0].date + '【' + weathers[0].week + '】：日出时间---' + weathers[0].sun_rise_time + '      日落时间---' + weathers[0].sun_down_time + '      天气---' + weathers[0].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[1].date + '【' + weathers[1].week + '】：日出时间---' + weathers[1].sun_rise_time + '      日落时间---' + weathers[1].sun_down_time + '      天气---' + weathers[1].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[2].date + '【' + weathers[2].week + '】：日出时间---' + weathers[2].sun_rise_time + '      日落时间---' + weathers[2].sun_down_time + '      天气---' + weathers[2].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[3].date + '【' + weathers[3].week + '】：日出时间---' + weathers[3].sun_rise_time + '      日落时间---' + weathers[3].sun_down_time + '      天气---' + weathers[3].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[4].date + '【' + weathers[4].week + '】：日出时间---' + weathers[4].sun_rise_time + '      日落时间---' + weathers[4].sun_down_time + '      天气---' + weathers[4].weather + ' </li>' +
+                        '<li style="width:100%">' + weathers[5].date + '【' + weathers[5].week + '】：日出时间---' + weathers[5].sun_rise_time + '      日落时间---' + weathers[5].sun_down_time + '      天气---' + weathers[5].weather + ' </li>' +
+                        '</ul>' +
+                        '</div>';
+                    $("#container4").html("").append(weathersHtml);
+
+
+                    var indexes = data.value[0].indexes;
+                    var indexesHtml = '</br><div class="container">' +
+                        '<h2 class="title">生活指数</h2>' +
+                        '</div>' +
+                        '<div class="" style=" flex: 1 1 auto; padding: 1.7rem 2.1rem">' +
+                        '<ul class="box" style = "list-style: none;padding: 0;margin: 0;">' +
+                        '<li style="width:100%">化妆指数：' + indexes[0].content + '</li>' +
+                        '<li style="width:100%">感冒指数：' + indexes[1].content + '</li>' +
+                        '<li style="width:100%">洗车指数：' + indexes[2].content + '</li>' +
+                        '<li style="width:100%">穿衣指数：' + indexes[3].content + '</li>' +
+                        '<li style="width:100%">运动指数：' + indexes[5].content + '</li>' +
+                        '<li style="width:100%">紫外线强度指数：' + indexes[4].content + '</li>' +
+                        '</ul>' +
+                        '</div>';
+                    $("#container5").html("").append(indexesHtml);
+
+                    var alarms = data.value[0].alarms;
+                    if (alarms.length) {
+                        alarms = alarms[0];
+                        var alarmsHtml = '<div class="container">' +
+                            '<h2 class="title">预警信息</h2>' +
+                            '</div>' +
+                            '<div class="" style=" flex: 1 1 auto; padding: 1.7rem 2.1rem">' +
+                            '<ul class="box" style = "list-style: none;padding: 0;margin: 0;">' +
+                            '<li style="width:100%">预警标题：' + alarms.alarmDesc + '</li>' +
+                            '<li style="width:100%">预警类型：' + alarms.alarmTypeDesc + '</li>' +
+                            '<li style="width:100%">发布时间：' + alarms.publishTime + '</li>' +
+                            '<li style="width:100%">预防措施：' + alarms.precaution + '</li>' +
+                            '<li style="width:100%">预警详情：' + alarms.alarmContent + '</li>' +
+                            '</ul>' +
+                            '</div>';
+                        $("#container6").html("").append(alarmsHtml);
+                    }
+                }
+            })
+        }
+
+    });
+
+</script>
+
+<!-- Custom Theme Scripts -->
+<script src="${ctxPath}/static/common/js/custom.min.js"></script>
+
+<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+</body>
+</html>

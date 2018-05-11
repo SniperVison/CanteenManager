@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+
+    <title>高校食堂管理系统</title>
+    <!-- Bootstrap -->
+    <link type="text/css" href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link type="text/css" href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link type="text/css" href="${ctxPath}/static/plugins/animate.css/animate.min.css" rel="stylesheet">
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+    <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link type="text/css" href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+    <!-- iCheck -->
+    <script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!--边框导航栏-->
+        <%
+        include("common/aside.html"){}
+        %>
+        <!--顶部-->
+        <%
+        include("common/top.html"){}
+        %>
+
+        <!--网页主体内容-->
+        <div class="right_col" role="main">
+            <div>
+                <table id="onlineTable" class="table table-hover"></table>
+            </div>
+        </div>
+        <!--底部-->
+        <%
+        include("common/footer.html"){}
+        %>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#onlineTable").bootstrapTable({
+            url: "${ctxPath}/session/list",
+            method: "post",
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            contentType: "application/json",//application/x-www-form-urlencoded请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            // sidePagination: "server",//服务端分页
+            toolbar: "#toolbar",
+            dataType: "json",
+            striped: true, // 是否显示行间隔色
+            search: true,
+            searchAlign: "right",
+            searchOnEnterKey: true,
+            buttonsAlign: "right",
+            showRefresh: true,
+            showColumns: true,
+            uniqueId: "id",
+            pageSize: "10",
+            pageNumber: "1",
+            pagination: true, // 是否分页
+            pageList: [5, 10, 20, 50, 100],
+            clickToSelect: true, //是否启用点击选中行
+            paginationPreText: "<<",
+            paginationNextText: ">>",
+            // showToggle: true,  显示异常，原因未知
+            locale: "zh-CN",
+            columns: [
+                {
+                    field: "id",
+                    visible: false
+                },
+                {
+                    field: "userId",
+                    visible: false
+                },
+                {
+                    field: 'username',
+                    title: '用户名称'
+                }, {
+                    field: 'startTimestamp',
+                    title: '登录时间'
+                }, {
+                    field: 'lastAccessTime',
+                    title: '最后访问时间'
+                }, {
+                    field: 'host',
+                    title: 'IP地址'
+                }, {
+                    field: 'location',
+                    title: '登录地点'
+                }, {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function (value, row, index) {
+                        if (value == '1') return '<span class="badge badge-success">在线</span>';
+                        if (value == '0') return '<span class="badge badge-danger">离线</span>';
+                    }
+                }, {
+                    title: '操作',
+                    formatter: function (value, row, index) {
+                        return "<a href='#' onclick='offline(\"" + row.id + "\",\"" + row.status + "\",\"" + row.username + "\")'>下线</a>";
+                    }
+                }],
+            onLoadSuccess: function () {  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function () {  //加载失败时执行
+                console.info("加载数据失败");
+            }
+        });
+    })
+
+    function loadFunction() {
+        $("#userListTable").html("正在拼命加载中.....");
+    }
+
+    function errorFunction() {
+        alert("加载失败");
+    }
+</script>
+
+<!-- Custom Theme Scripts -->
+<script src="${ctxPath}/static/common/js/custom.min.js"></script>
+<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+</body>
+</html>

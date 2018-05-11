@@ -1,0 +1,115 @@
+server:
+  port: 10010
+#  context-path: /canteen
+
+# 图片上传路径
+tmpLocation: E:/image
+
+# 日志
+logging:
+  config: classpath:log4j2.yml
+
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #jdbc驱动包6以上需要加上serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/canteen_manager?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    password: root
+    username: root
+
+
+ # 连接池配置
+    initialSize: 1
+    minIdle: 5
+    maxActive: 5
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    pool-prepared-statements: true
+    max-pool-prepared-statement-per-connection-size: 20
+    filters: stat,wall,log4j2
+    connection-properties:
+    - key: druid.stat.mergeSql
+      value: true
+    - key: druid.stat.slowSqlMillis
+      value: 5000
+
+
+
+
+#腾讯云redis
+redis:
+  port: ${REDIS_PORT:6379}
+  host: ${REDIS_HOST:111.230.128.208}
+  database: ${REDIS_DATABASE:2}
+  password: ${REDIS_PASSWORD:123456}
+  block-when-exhausted: ${REDIS_BLOCK:true}
+  jmx-enabled: ${REDIS_JMX_ENABLE:true}
+  min-idle: ${REDIS_MIN_IDLE:0}
+  max-total: ${REDIS_MAX_TOTAL:50}
+  max-idle: ${REDIS_MAX_IDLE:10}
+  max-wait-millis: ${REDIS_MAX_WAIT_MILLIS:20000}
+  test-on-borrow: ${REDIS_TEST_ON_BORROW:true}
+  test-on-return: ${REDIS_TEST_ON_RETURN:true}
+  test-while-idle: ${REDIS_TEST_WHILE_IDLE:true}
+  num-tests-per-eviction-run: ${REDIS_TEST_PER_EVICT_RUN:2}
+  time-between-eviction-runs-millis: ${REDIS_BETWEEN_EVICT_MILLIS:15000}
+
+
+mybatis-plus:
+# 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+# 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+    mapper-locations: classpath:/mapper/*Mapper.xml
+    #实体扫描，多个package用逗号或者分号分隔
+    typeAliasesPackage: com.vison.canteen.biz.bean,com.vison.canteen.core.bean
+    # 支持统配符 * 或者 ; 分割
+    typeEnumsPackage: com.vison.canteen.*.enums
+    global-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: 2
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+      field-strategy: 2
+      #驼峰下划线转换
+      db-column-underline: true
+      #刷新mapper 调试神器
+      refresh-mapper: true
+      #数据库大写下划线转换
+      capital-mode: true
+      #Sequence序列接口实现类配置
+      #key-generator: com.baomidou.mybatisplus.incrementer.OracleKeyGenerator
+      #逻辑删除配置（下面3个配置）
+      #logic-delete-value: 1
+      #logic-not-delete-value: 0
+      #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+      #自定义填充策略接口实现
+      #meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
+    configuration:
+      map-underscore-to-camel-case: true
+      cache-enabled: false
+      #配置JdbcTypeForNull
+      #jdbc-type-for-null: 'null'
+
+#druid监控界面, 网址: http://127.0.0.1:10010/druid/login.html
+druid:
+  init: true
+  username: admin
+  password: admin
+  log-slow-sql: true
+
+#swagger 接口文档 网址: http://127.0.0.1:10010/swagger-ui.html
+swagger:
+  init: true
+  base-package: ${CANTEEN_SWAGGER_BASE_PACKAGE:com.vison.canteen}
+  title: ${CANTEEN_SWAGGER_TITLE:高校食堂管理系统}
+  desc: ${CANTEEN_SWAGGER_DESC:毕业设计之高校食堂管理系统}
+  url: ${CANTEEN_SWAGGER_URL:localhost:10010}
+  name: ${CANTEEN_SWAGGER_NAME:黄文燊}
+  email: ${CANTEEN_SWAGGER_EMAIL:xiehevison@163.com}
+  version: ${CANTEEN_SWAGGER_VERSION:0.0.1}
+

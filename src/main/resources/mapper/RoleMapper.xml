@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vison.canteen.core.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.vison.canteen.core.bean.PO.RolePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="role"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="is_able" jdbcType="TINYINT" property="able"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+    <select id="selectRoleListByIds" resultMap="BaseResultMap">
+        SELECT *
+        FORM sys_role
+        WHERE id IN
+        <foreach collection="roleIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getAllRole" resultMap="BaseResultMap">
+        SELECT *
+        FROM sys_role;
+    </select>
+
+</mapper>

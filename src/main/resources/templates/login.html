@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+    <title>高校食堂管理系统</title>
+    <!-- Bootstrap -->
+    <link type="text/css" href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link type="text/css" href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link type="text/css" href="${ctxPath}/static/plugins/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link type="text/css" href="${ctxPath}/static/plugins/animate.css/animate.min.css" rel="stylesheet">
+
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link type="text/css" href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/additional-methods.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/messages_zh.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+
+</head>
+
+<body class="login">
+<div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                <form id="login-form">
+                    <h1>登录</h1>
+                    <div>
+                        <input id="username" name="username" type="text" class="form-control" placeholder="账号"
+                               required=""/>
+                    </div>
+                    <div>
+                        <input id="password" name="password" type="password" class="form-control" placeholder="密码"
+                               required=""/>
+                    </div>
+                    <div class="input-group input-group-md">
+                        <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+                            <input class="form-control" type="text" name="validatorCode" id="validatorCode"
+                                   placeholder="验证码" required=""/>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1" style="padding-left: 0px; padding-right: 0px;">
+                            <img alt="验证码" src="${ctxPath}/kaptcha/get-gif-code" id="kaptcha" width="90%" height="90%"
+                                 onclick="reloadCode()"/>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="float: left"><input type="checkbox" id="rememberMe" name="remember">记住密码</div>
+                        <div style="float: right"><a href="#" style="text-decoration: none">忘记密码?</a></div>
+                        </br></br>
+                        <button id="ajaxLogin" type="button"
+                                class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal layui-btn-fluid"
+                                onclick="login();">
+                            登录
+                        </button>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <p class="change_link">没有账号？
+                            <a href="#signup" class="to_register" style="text-decoration: none"> 立即注册 </a>
+                        </p>
+
+                        <div class="clearfix"></div>
+                        <!--友情链接和版权信息-->
+                        <div class="container" style="margin-top: 10px;">
+                            <div class="row">
+                                <div>
+                                    <h1><i class="fa fa-paw"></i>高校食堂管理系统</h1>
+                                    <p>©2018 All Rights Reserved. Vison</p>
+                                </div>
+                                <div class="" align="center">
+                                    <a href="http://www.hunau.edu.cn/" target="_blank"
+                                       style="color: #0b93d5; text-decoration: none">湖南农业大学官网</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <div id="register" class="animate form registration_form">
+            <section class="login_content">
+                <form id="signup-form">
+                    <h1>注册</h1>
+                    <div>
+                        <input id="signupUsername" name="signupUsername" type="text" class="form-control"
+                               placeholder="账号" required=""/>
+                    </div>
+                    <div>
+                        <input id="signupPassword" name="signupPassword" type="password" class="form-control"
+                               placeholder="密码" required=""/>
+                    </div>
+                    <div>
+                        <input id="signupEmail" name="signupEmail" type="email" class="form-control" placeholder="邮箱"
+                               required=""/>
+                    </div>
+                    <div>
+                        <button id="ajaxRegister" type="button"
+                                class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal layui-btn-fluid">
+                            注册
+                        </button>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <p class="change_link">已有账号?
+                            <a href="#signin" class="to_register"> 立即登录 </a>
+                        </p>
+
+                        <div class="clearfix"></div>
+                        <!--友情链接和版权信息-->
+                        <div class="container" style="margin-top: 10px;">
+                            <div class="row">
+                                <div>
+                                    <h1><i class="fa fa-paw"></i>高校食堂管理系统</h1>
+                                    <p>©2018 All Rights Reserved. Vison</p>
+                                </div>
+                                <div class="" align="center">
+                                    <a href="http://www.hunau.edu.cn/" target="_blank"
+                                       style="color: #0b93d5; text-decoration: none">湖南农业大学官网</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $().ready(function () {
+        $("#login-form").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true
+                },
+                validatorCode: {
+                    required: true,
+                    remote: {
+                        url: "${ctxPath}/kaptcha/check-gif-code",
+                        type: "post",
+                        dateType: "json",
+                        async: false,
+                        data: {
+                            gifCode: function () {
+                                return $("#validatorCode").val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                username: {
+                    required: "请输入账号名"
+                },
+                password: {
+                    required: "请输入密码"
+                },
+                validatorCode: {
+                    required: "请输入验证码",
+                    remote: "验证码不正确"
+                }
+            }
+        });
+        $().ready(function () {
+            $("#signup-form").validate({
+                rules: {
+                    signupUsername: {
+                        required: true,
+                        remote: {
+                            url: "${ctxPath}/register/get-user-by-username",
+                            type: "post",
+                            dateType: "json",
+                            async: false,
+                            data: {
+                                username: function () {
+                                    return $("#signupUsername").val();
+                                }
+                            }
+                        }
+                    },
+                    signupPassword: {
+                        required: true,
+                        rangelength: [3, 10]
+                    },
+                    signupEmail: {
+                        required: true,
+                        email: true
+                    }
+                },
+                messages: {
+                    signupUsername: {
+                        required: "请输入用户名",
+                        remote: "该用户名已被注册"
+                    },
+                    signupPassword: {
+                        required: "请输入密码",
+                        rangelength: "密码长度必须为3~10位长度"
+                    },
+                    signupEmail: {
+                        required: "请输入邮箱",
+                        email: "请输入正确的邮箱"
+                    }
+                }
+            });
+        });
+    });
+
+    function login() {
+        if ($("#login-form").valid()) {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            var rememberMe = $("#rememberMe").is(":checked");
+            // $("#ajaxLogin").addClass(disabled);
+            $.ajax({
+                url: "${ctxPath}/ajax-login",
+                type: "POST",
+                data: {
+                    username: username,
+                    password: password,
+                    rememberMe: rememberMe
+                },
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == "200") {
+                        swal({
+                            title: "登录成功",
+                            type: "success",
+                            timer: 2000
+                        });
+                        location.href = "${ctxPath}/main";
+                    } else {
+                        swal({
+                            text: result.message,
+                            type: "warning",
+                            timer: 2000
+                        });
+                    }
+                },
+                error: function () {
+                    swal({
+                        text: "出现未知异常了",
+                        type: "error",
+                        timer: 2000
+                    });
+                }
+            });
+        }
+    }
+
+    $("#ajaxRegister").click(function () {
+        if ($("#signup-form").valid()) {
+            var username = $("#signupUsername").val();
+            var password = $("#signupPassword").val();
+            var email = $("#signupEmail").val();
+            // $("#ajaxRegister").addClass(disabled);
+            $.ajax({
+                url: "${ctxPath}/register/sign-up",
+                type: "POST",
+                dataType: "json",
+                async: true,
+                data: {
+                    username: username,
+                    password: password,
+                    email: email
+                },
+                success: function (result) {
+                    if (result.status == "200") {
+                        location.href = "${ctxPath}";
+                    } else {
+                        alert("出现未知异常了");
+                    }
+                }
+            })
+        }
+    });
+
+    //刷新获取验证码(JQuery放在最后引用时无效)
+    function reloadCode() {
+        $("#kaptcha").click(function () {
+            $(this).attr("src", "${ctxPath}/kaptcha/get-gif-code?" + new Date());
+        });
+    }
+
+    // TODO 回车登录 ，有bugs，暂不使用
+    // document.onkeyup = function (e) {
+    //     if (window.event)
+    //         e = window.event;
+    //     var code = e.charCode || e.keyCode;
+    //     if (code == 13) {
+    //         login();
+    //     }
+    // }
+
+</script>
+</body>
+</html>

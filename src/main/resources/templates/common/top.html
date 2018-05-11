@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+    <title>高校食堂管理系统</title>
+
+</head>
+<body>
+<!-- top navigation -->
+<div class="top_nav">
+    <div class="nav_menu">
+        <nav>
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                       aria-expanded="false">
+                        <img src="${ctxPath}/user/get-user-avatar" alt="头像"
+                             onerror="this.src='${ctxPath}/static/avatar/496b3ace787342f7954b7045b8b06804.jpeg'">
+                        <% if(user.name==null) { %>
+                        ${user.username}
+                        <% } %>
+                        <% else { %>
+                        ${user.name}
+                        <% } %>
+                        <span class=" fa fa-angle-down"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                        <li>
+                            <a href="${ctxPath}/user/user-info">
+                                <span>个人资料</span>
+                            </a>
+                        </li>
+                        <li><a href="${ctxPath}/logout"><i class="fa fa-sign-out pull-right"></i>退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- /top navigation -->
+<script type="text/javascript">
+    $("#user_info").click(function () {
+        $("#userModal").modal("show");
+    })
+
+</script>
+</body>
+</html>

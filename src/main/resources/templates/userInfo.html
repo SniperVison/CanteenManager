@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+
+    <title>高校食堂管理系统</title>
+
+    <!-- Bootstrap -->
+    <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 字体样式-->
+    <link href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- iCheck 选项插件-->
+    <link href="${ctxPath}/static/plugins/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!--Bootstrap-table 表格样式-->
+    <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker 日期样式-->
+    <link href="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Custom Theme Style 自定义样式-->
+    <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+    <!--bootstrap-select-->
+    <link href="${ctxPath}/static/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+    <!--sweetAlert-->
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+    <!--bootstrap-fileinput文件上传插件-->
+    <link href="${ctxPath}/static/plugins/bootstrap-fileinput-4.4.8/css/fileinput.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-fileinput-4.4.8/js/fileinput.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-fileinput-4.4.8/js/locales/zh.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+
+
+</head>
+
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!--边框导航栏-->
+        <%
+        include("common/aside.html"){}
+        %>
+        <!--顶部-->
+        <%
+        include("common/top.html"){}
+        %>
+        <!--网页主体内容-->
+        <div class="right_col" role="main">
+            <form class="col-md-offset-3" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" style="line-height: 270%">头像上传:</label>
+                    <div class="col-sm-6">
+                        <input id="imgFile" name="imgFile" type="file" class="file">
+                        <p class="help-block">支持jpg、jpeg、png格式，大小不超过2.0M</p>
+                    </div>
+                </div>
+            </form>
+            </br>
+            <form class="col-md-offset-3" role="form">
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">个人简介:</label>
+                    <div class="col-md-4">
+                        <textarea id="user_content" class="form-control" placeholder="填写你的个人简介(100字以内)" rows="5"
+                                  style="width:400px ;height: 160px">${userInfo.content!""}</textarea>
+                    </div>
+                </div>
+                </br></br></br></br></br></br></br></br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">账号:</label>
+                    <div class="col-md-4">
+                        <input id="user_username" type="text" class="form-control" value="${user.username}" readonly/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">昵称:</label>
+                    <div class="col-md-4">
+                        <input id="user_name" type="text" class="form-control" value="${user.name}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">手机:</label>
+                    <div class="col-md-4">
+                        <input id="user_phone" type="text" class="form-control" value="${userInfo.phone!''}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">邮箱:</label>
+                    <div class="col-md-4">
+                        <input id="user_email" type="email" class="form-control" value="${user.email}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">学院:</label>
+                    <div class="col-md-4">
+                        <input id="user_college" type="text" class="form-control" value="${userInfo.college!''}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">专业:</label>
+                    <div class="col-md-4">
+                        <input id="user_profession" type="text" class="form-control" value="${userInfo.profession!''}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <div class="form-group">
+                    <label class="col-md-1 control-label" style="line-height: 270%">班级:</label>
+                    <div class="col-md-4">
+                        <input id="user_class" type="text" class="form-control" value="${userInfo.classes!''}"/>
+                    </div>
+                </div>
+                </br></br></br>
+                <button id="userInfoBtn" name="userInfoBtn" type="button"
+                        class="btn btn-success btn-lg col-md-offset-3">保存
+                </button>
+            </form>
+            </br></br></br>
+
+        </div>
+
+        <!--底部-->
+        <%
+        include("common/footer.html"){}
+        %>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#userInfoBtn").click(function () {
+        var data = {
+            content: $("#user_content").val() == "" ? null : $("#user_content").val(),
+            username: $("#user_username").val(),
+            name: $("#user_name").val(),
+            phone: $("#user_phone").val() == "" ? null : $("#user_phone").val(),
+            email: $("#user_email").val() == "" ? null : $("#user_email").val(),
+            college: $("#user_college").val() == "" ? null : $("#user_college").val(),
+            profession: $("#user_profession").val() == "" ? null : $("#user_profession").val(),
+            classes: $("#user_class").val() == "" ? null : $("#user_class").val()
+        };
+        swal({
+            title: "提示",
+            text: "是否确认保存?",
+            type: "warning",
+            showCancelButton: true, //是否显示取消按钮
+            confirmButtonColor: "#DD6B55",//确定按钮颜色
+            cancelButtonText: "取消",//取消按钮文本
+            confirmButtonText: "确认",//确定按钮文本
+        }).then(function (isConfirm) {
+            if (isConfirm == true) {
+                $.ajax({
+                    type: "post",
+                    url: "${ctxPath}/user/update-user-info",
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if ($.trim(result) == "true") {
+                            swal.close();
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    //bootstrap-fileinput上传图片
+    $("#imgFile").fileinput({
+        uploadUrl: "${ctxPath}/user/uploadImg",
+        language: 'zh', //设置语言
+        allowedPreviewTypes: ['image'],
+        allowedFileTypes: ['image'],
+        allowedFileExtensions: ['jpg', 'jpeg', 'png'],//接收的文件后缀
+        uploadAsync: false, //默认异步上传
+        showUpload: true, //是否显示上传按钮
+        showRemove: true, //显示移除按钮
+        showPreview: true, //是否显示预览
+        showCaption: true,//是否显示标题
+        browseClass: "btn btn-primary", //按钮样式
+        dropZoneEnabled: false,//是否显示拖拽区域
+        maxFileSize: 2048,//单位为kb，如果为0表示不限制文件大小
+        maxFileCount: 1, //表示允许同时上传的最大文件个数
+        enctype: 'multipart/form-data',
+        validateInitialCount: true,
+        previewFileIcon: "<iclass='glyphicon glyphicon-king'></i>",
+        msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+    });
+    //异步上传返回结果处理
+    $("#imgFile").on('fileerror', function (event, data, msg) {
+        console.log("fileerror");
+        console.log(data);
+    });
+    //异步上传返回结果处理
+    $("#imgFile").on("fileuploaded", function (event, data, previewId, index) {
+        console.log("fileuploaded");
+        console.log(data);
+    });
+
+    //同步上传错误处理
+    $("#imgFile").on('filebatchuploaderror', function (event, data, msg) {
+        console.log("filebatchuploaderror");
+        console.log(data);
+    });
+
+    //同步上传返回结果处理
+    $("#imgFile").on("filebatchuploadsuccess",
+        function (event, data, previewId, index) {
+            console.log("filebatchuploadsuccess");
+            console.log(data);
+            window.location.reload(); //刷新当前页面
+        });
+
+    //上传前数据处理
+    $("#imgFile").on('filepreupload', function (event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+        console.log("filepreupload");
+    });
+</script>
+
+<!-- iCheck -->
+<script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
+<!-- DateJS -->
+<script src="${ctxPath}/static/plugins/DateJS/build/date.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="${ctxPath}/static/plugins/moment/min/moment.min.js"></script>
+<script src="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="${ctxPath}/static/common/js/custom.min.js"></script>
+
+<script src="${ctxPath}/static/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+
+
+</body>
+</html>

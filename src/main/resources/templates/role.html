@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+
+    <title>高校食堂管理系统</title>
+
+    <!-- Bootstrap -->
+    <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 字体样式-->
+    <link href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- iCheck 选项插件-->
+    <link href="${ctxPath}/static/plugins/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!--Bootstrap-table 表格样式-->
+    <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker 日期样式-->
+    <link href="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Custom Theme Style 自定义样式-->
+    <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+    <!--bootstrap-select-->
+    <link href="${ctxPath}/static/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+    <!--sweetAlert-->
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!--边框导航栏-->
+        <%
+        include("common/aside.html"){}
+        %>
+        <!--顶部-->
+        <%
+        include("common/top.html"){}
+        %>
+        <!--网页主题内容-->
+        <div class="right_col" role="main">
+            <div id="toolbar" class="btn-group">
+                <button id="role_add" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
+                <button id="role_delete" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
+                </button>
+            </div>
+            <table id="roleListTable" class="table table-hover"></table>
+
+        </div>
+
+        <!-- Modal 模态框-->
+        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel" style="text-align: center">修改操作</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <!--  模态框内容，我在此处添加一个表单 -->
+                        <form class="form-horizontal" role="form" id="updateForm">
+                            <div class="form-group">
+                                <label for="rname" class="col-sm-2 control-label">角色名称</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="rname" name="rname" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="rdescription" class="col-sm-2 control-label">角色描述</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="rdescription" name="rdescription" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="rable" class="col-sm-2 control-label">角色状态</label>
+                                <div class="col-sm-8">
+                                    <select class="selectpicker form-control " id="rable" name="rable">
+                                        <option value="有效" data-content="<span class='badge badge-pill badge-success'
+                                        style='background-color: #28a745; color: #fff;'>有效</span>">有效
+                                        </option>
+                                        <option value="失效" data-content="<span class='badge badge-pill badge-warning'
+                                        style='background-color: #ffc107; color: #212529;;'>失效</span>">
+                                            失效
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer" style="text-align: center">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
+                        </button>
+                        <button id="updateSaveRecord" type="button" class="btn btn-primary"
+                                data-dismiss="modal"><span
+                                class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--底部-->
+        <%
+        include("common/footer.html"){}
+        %>
+    </div>
+</div>
+<script type="text/javascript">
+
+    //构造角色列表表格
+    $(function () {
+        $("#roleListTable").bootstrapTable({
+            url: "${ctxPath}/role/get-all-role",
+            method: "get",
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            contentType: "application/json",//application/x-www-form-urlencoded请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            // sidePagination: "server",//服务端分页
+            toolbar: "#toolbar",
+            dataType: "json",
+            striped: true, // 是否显示行间隔色
+            search: true,
+            searchAlign: "right",
+            searchOnEnterKey: true,
+            buttonsAlign: "right",
+            showRefresh: true,
+            showColumns: true,
+            uniqueId: "id",
+            pageSize: "10",
+            pageNumber: "1",
+            pagination: true, // 是否分页
+            pageList: [5, 10, 20, 50, 100],
+            clickToSelect: true, //是否启用点击选中行
+            paginationPreText: "<<",
+            paginationNextText: ">>",
+            columns: [
+                {
+                    title: "全选",
+                    checkbox: true,
+                    align: "center"
+                },
+                {
+                    field: "id",
+                    visible: false,
+                    align: "center",
+                },
+                {
+                    field: "role",
+                    title: "角色名称",
+                    align: "center",
+                },
+                {
+                    field: "description",
+                    title: "角色描述",
+                    align: "center",
+                },
+                {
+                    field: "able",
+                    title: "角色状态",
+                    align: "center",
+                    formatter: ableFormatter
+                },
+                {
+                    title: "操作",
+                    width: 120,
+                    align: "center",
+                    valign: "middle",
+                    formatter: operateFormatter,
+                    events: operateEvents
+                }
+            ],
+            onLoadSuccess: function () {  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function () {  //加载失败时执行
+                console.info("加载数据失败");
+            }
+        });
+    });
+
+    window.operateEvents = {
+        "click #editTable": function (e, value, row, index) {
+            $("#updateModal").modal("show");
+            $("input[id=rname]").val(row['role']);
+            $("input[id=rdescription]").val(row['description']);
+            $("#rable").selectpicker('val', row['able'] == true ? "有效" : "失效");
+            $('#rable').selectpicker('refresh');
+
+        },
+        "click #deleteTable": function (e, value, row, index) {
+        }
+    }
+
+
+    //操作栏的格式化
+    function operateFormatter(value, row, index) {
+        var result = "";
+        result += "<a href='javascript:;' id='editTable' class='btn btn-xs blue' title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+        result += "<a href='javascript:;' id='deleteTable' class='btn btn-xs red'  title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+        return result;
+    }
+
+    function ableFormatter(value, row, index) {
+        if (value == true) return '<span class="badge badge-pill badge-success" style="background-color: #28a745; color: #fff;">有效</span>';
+        else return '<span class="badge badge-pill badge-warning" style="background-color: #ffc107; color: #212529;">无效</span>';
+    }
+
+    function loadFunction() {
+        $("#userListTable").html("正在拼命加载中.....");
+    }
+
+    function errorFunction() {
+        alert("加载失败");
+    }
+
+
+</script>
+
+<!-- iCheck -->
+<script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
+<!-- DateJS -->
+<script src="${ctxPath}/static/plugins/DateJS/build/date.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="${ctxPath}/static/plugins/moment/min/moment.min.js"></script>
+<script src="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="${ctxPath}/static/common/js/custom.min.js"></script>
+
+<script src="${ctxPath}/static/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="${ctxPath}/static/plugins/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
+<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+
+</body>
+</html>
