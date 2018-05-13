@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="高校食堂管理系统">
+    <meta name="author" content="Vison">
+
+    <title>高校食堂管理系统</title>
+
+    <style>
+        .gw_num {
+            border: 1px solid #dbdbdb;
+            width: 110px;
+            line-height: 26px;
+            overflow: hidden;
+        }
+
+        .gw_num em {
+            display: block;
+            height: 26px;
+            width: 26px;
+            float: left;
+            color: #7A7979;
+            border-right: 1px solid #dbdbdb;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .gw_num .num {
+            display: block;
+            float: left;
+            text-align: center;
+            width: 52px;
+            font-style: normal;
+            font-size: 14px;
+            line-height: 24px;
+            border: 0;
+        }
+
+        .gw_num em.add {
+            float: right;
+            border-right: 0;
+            border-left: 1px solid #dbdbdb;
+        }
+    </style>
+
+    <!-- Bootstrap -->
+    <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 字体样式-->
+    <link href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style 自定义样式-->
+    <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
+    <!--sweetAlert-->
+    <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
+
+    <!--Bootstrap-table 表格样式-->
+    <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- iCheck 选项插件-->
+    <link href="${ctxPath}/static/plugins/iCheck/skins/flat/green.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
+    <!-- iCheck -->
+    <script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/additional-methods.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/messages_zh.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+
+</head>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!--边框导航栏-->
+        <%
+        include("common/aside.html"){}
+        %>
+        <!--顶部-->
+        <%
+        include("common/top.html"){}
+        %>
+        <!--网页主体内容-->
+        <div class="right_col" role="main">
+
+
+            <div id="toolbar" class="btn-group">
+                <button id="v_add" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
+                <button id="v_delete" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
+                </button>
+            </div>
+            <table id="vegetableListTable" class="table table-hover"></table>
+        </div>
+
+        <!--底部-->
+        <%
+        include("common/footer.html"){}
+        %>
+
+    </div>
+
+    <!--新增模态框-->
+    <div id="addModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">新增数据</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  模态框内容，我在此处添加一个表单 -->
+                    <form class="form-horizontal" role="form" id="addForm">
+                        <div class="form-group">
+                            <label for="vname" class="col-sm-2 control-label col-sm-offset-2">名称:</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="vname" name="vname" class="form-control" required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vprice" class="col-sm-2 control-label col-sm-offset-2">单价:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon">￥</span>
+                                    <input id="vprice" name="vprice" type="text" class="form-control" required>
+                                    <span class="input-group-addon">元</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vstock" class="col-sm-2 control-label col-sm-offset-2">库存量:</label>
+                            <div class="col-sm-4">
+                                <div class="gw_num">
+                                    <em class="reduce">-</em>
+                                    <input id="vstock" name="vstock" type="text" value="1" class="num"
+                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required/>
+                                    <em class="add">+</em>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vunit" class="col-sm-2 control-label col-sm-offset-2">单位:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="vunit" name="vunit" type="text" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vshelflife" class="col-sm-2 control-label col-sm-offset-2">保质期:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="vshelflife" name="vshelflife" type="text" class="form-control"
+                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required>
+                                    <span class="input-group-addon">天</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vwholesaler" class="col-sm-2 control-label col-sm-offset-2">批发商:</label>
+                            <div class="col-sm-4">
+                                <input id="vwholesaler" name="vwholesaler" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vupdator" class="col-sm-2 control-label col-sm-offset-2">处理人:</label>
+                            <div class="col-sm-4">
+                                <input id="vupdator" name="vupdator" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                    <button id="v_add_save" type="button" class="btn btn-success">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--编辑模态框-->
+    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" style="text-align: center">编辑数据</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  模态框内容，我在此处添加一个表单 -->
+                    <form class="form-horizontal" role="form" id="editForm">
+                        <div class="form-group">
+                            <label for="v_edit_name" class="col-sm-2 control-label col-sm-offset-2">名称:</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="v_edit_name" name="v_edit_name" class="form-control" required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_price" class="col-sm-2 control-label col-sm-offset-2">单价:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon">￥</span>
+                                    <input id="v_edit_price" name="v_edit_price" type="text" class="form-control"
+                                           required>
+                                    <span class="input-group-addon">元</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_stock" class="col-sm-2 control-label col-sm-offset-2">库存量:</label>
+                            <div class="col-sm-4">
+                                <div class="gw_num">
+                                    <em class="reduce">-</em>
+                                    <input id="v_edit_stock" name="v_edit_stock" type="text" value="1" class="num"
+                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required/>
+                                    <em class="add">+</em>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_unit" class="col-sm-2 control-label col-sm-offset-2">单位:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="v_edit_unit" name="v_edit_unit" type="text" class="form-control"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_shelflife" class="col-sm-2 control-label col-sm-offset-2">保质期:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="v_edit_shelflife" name="v_edit_shelflife" type="text"
+                                           class="form-control"
+                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required>
+                                    <span class="input-group-addon">天</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_wholesaler" class="col-sm-2 control-label col-sm-offset-2">批发商:</label>
+                            <div class="col-sm-4">
+                                <input id="v_edit_wholesaler" name="v_edit_wholesaler" type="text" class="form-control"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="v_edit_updator" class="col-sm-2 control-label col-sm-offset-2">处理人:</label>
+                            <div class="col-sm-4">
+                                <input id="v_edit_updator" name="v_edit_updator" type="text" class="form-control"
+                                       required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                    <button id="v_edit_save" type="button" class="btn btn-success">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+</div>
+<script type="text/javascript">
+
+    $("#addForm").validate({
+        rules: {
+            vname: {
+                required: true,
+                remote: {
+                    url: "${ctxPath}/vegetable/check-vegetable-name",
+                    type: "post",
+                    dateType: "json",
+                    async: false,
+                    data: {
+                        name: $("#vname").val()
+                    }
+                }
+            },
+            vprice: {
+                required: true,
+                number: true
+            },
+            vstock: {
+                required: true,
+                digits: true
+            },
+            vunit: "required",
+            vshelflife: "required",
+            vwholesaler: "required",
+            vupdator: "required",
+        },
+        messages:
+            {
+                vname: {
+                    required: "请输入蔬菜名称",
+                    remote: "该蔬菜数据已存在"
+                },
+                vprice: {
+                    required: "请输入单价",
+                    number: "请输入正确的价钱"
+                },
+                vstock: {
+                    required: "请输入库存数量",
+                    digits: "请输入整数"
+                },
+                vunit: {
+                    required: "请输入单位"
+                },
+                vshelflife: {
+                    required: "请输入保质期"
+                },
+                vwholesaler: {
+                    required: "请输入批发商名称"
+                },
+                vupdator: {
+                    required: "请输入处理人名称"
+                }
+            }
+    });
+
+
+    $("#editForm").validate({
+        rules: {
+            v_edit_name: "required",
+            v_edit_price: {
+                required: true,
+                number: true
+            },
+
+            v_edit_stock: {
+                required: true,
+                digits: true
+            },
+            v_edit_unit: "required",
+            v_edit_shelflife: "required",
+            v_edit_wholesaler: "required",
+            v_edit_updator: "required",
+        },
+        messages:
+            {
+                v_edit_name: {
+                    required: "请输入蔬菜名称"
+                },
+                v_edit_price: {
+                    required: "请输入单价",
+                    number: "请输入正确的价钱"
+                },
+                v_edit_stock: {
+                    required: "请输入库存数量",
+                    digits: "请输入整数"
+                },
+                v_edit_unit: {
+                    required: "请输入单位"
+                },
+                v_edit_shelflife: {
+                    required: "请输入保质期"
+                },
+                v_edit_wholesaler: {
+                    required: "请输入批发商名称"
+                },
+                v_edit_updator: {
+                    required: "请输入处理人名称"
+                }
+            }
+    });
+
+
+    //批量删除按钮点击事件
+    $("#v_delete").click(function () {
+        var selectData = $("#vegetableListTable").bootstrapTable("getSelections");
+        if (selectData.length == 0 || selectData == null) {
+            return;
+        }
+        var data = new Array();
+        selectData.forEach(function (result) {
+            data.push(result.id);
+        });
+        swal({
+            title: "提示",
+            text: "是否确认删除选中的记录?",
+            type: "warning",
+            showCancelButton: true, //是否显示取消按钮
+            confirmButtonColor: "#DD6B55",//确定按钮颜色
+            cancelButtonText: "取消",//取消按钮文本
+            confirmButtonText: "确认",//确定按钮文本
+        }).then(function (isConfirm) {
+            if (isConfirm == true) {
+                $.ajax({
+                    type: "post",
+                    url: "${ctxPath}/vegetable/delete-vegetable-by-ids",
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if ($.trim(result) == "true") {
+                            swal({
+                                title: "保存成功",
+                                type: "success",
+                                timer: 2000
+                            });
+                            $("#userListTable").bootstrapTable("refresh", {
+                                url: "${ctxPath}/vegetable/get-all-vegetable"
+                            });
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    //新增按钮事件
+    $("#v_add").click(function () {
+        $("#addModal").modal("show");
+        $("#v_add_save").click(function () {
+            if ($("#addForm").valid()) {
+                console.log("新增校验成功");
+                var data = {
+                    name: $("#vname").val(),
+                    price: $("#vprice").val(),
+                    stock: $("#vstock").val(),
+                    unit: $("#vunit").val(),
+                    shelfLife: $("#vshelflife").val(),
+                    wholeSaler: $("#vwholesaler").val(),
+                    updator: $("#vupdator").val()
+                };
+                swal({
+                    title: "提示",
+                    text: "是否确认保存?",
+                    type: "warning",
+                    showCancelButton: true, //是否显示取消按钮
+                    confirmButtonColor: "#DD6B55",//确定按钮颜色
+                    cancelButtonText: "取消",//取消按钮文本
+                    confirmButtonText: "确认",//确定按钮文本
+                }).then(function (isConfirm) {
+                    if (isConfirm == true) {
+                        $.ajax({
+                            url: "${ctxPath}/vegetable/add",
+                            type: "post",
+                            contentType: "application/json;charset=utf-8",
+                            data: JSON.stringify(data),
+                            success: function (result) {
+                                if ($.trim(result) == "true") {
+                                    swal({
+                                        title: "保存成功",
+                                        type: "success",
+                                        timer: 2000
+                                    });
+                                    $("#vegetableListTable").bootstrapTable("refresh", {
+                                        url: "${ctxPath}/vegetable/get-all-vegetable"
+                                    });
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
+    //操作栏的格式化
+    function operateFormatter(value, row, index) {
+        var result = "";
+        // result += "<a href='javascript:;' id='viewTable' class='btn btn-xs green'  title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+        result += "<a href='javascript:;' id='editTable' class='btn btn-xs blue' title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+        result += "<a href='javascript:;' id='deleteTable' class='btn btn-xs red'  title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+        return result;
+    }
+
+    //操作栏事件响应
+    window.operateEvents = {
+
+        //暂时没用
+        "click #viewTable": function (e, value, row, index) {
+
+        }, "click #editTable": function (e, value, row, index) {
+            // 初始化模态框并赋值
+            $().ready(function () {
+                $("#editModal").modal("show");
+                $("input[id=v_edit_name]").val(row['name']);
+                $("input[id=v_edit_name]").attr("readOnly", "readOnly");
+                $("input[id=v_edit_price]").val(row['price']) == "" ? null : $("input[id=v_edit_price]").val(row['price']);
+                $("input[id=v_edit_stock]").val(row['stock']) == "" ? null : $("input[id=v_edit_stock]").val(row['stock']);
+                $("input[id=v_edit_unit]").val(row['unit']) == "" ? null : $("input[id=v_edit_unit]").val(row['unit']);
+                $("input[id=v_edit_shelflife]").val(row['shelfLife']) == "" ? null : $("input[id=v_edit_shelflife]").val(row['shelfLife']);
+                $("input[id=v_edit_wholesaler]").val(row['wholeSaler']) == "" ? null : $("input[id=v_edit_wholesaler]").val(row['wholeSaler']);
+                $("input[id=v_edit_updator]").val(row['updator']) == "" ? null : $("input[id=v_edit_updator]").val(row['updator']);
+            });
+
+            $("#v_edit_save").click(function () {
+                if ($("#editForm").valid()) {
+                    console.log("编辑校验成功");
+                    swal({
+                        title: "提示",
+                        text: "是否确认修改这条记录?",
+                        type: "warning",
+                        showCancelButton: true, //是否显示取消按钮
+                        confirmButtonColor: "#DD6B55",//确定按钮颜色
+                        cancelButtonText: "取消",//取消按钮文本
+                        confirmButtonText: "确认",//确定按钮文本
+                    }).then(function (isConfirm) {
+                        if (isConfirm == true) {
+                            var data = {
+                                id: row["id"],
+                                name: $("#v_edit_name").val(),
+                                price: $("#v_edit_price").val(),
+                                stock: $("#v_edit_stock").val(),
+                                unit: $("#v_edit_stock").val(),
+                                shelfLife: $("#v_edit_shelflife").val(),
+                                wholeSaler: $("#v_edit_wholesaler").val(),
+                                updator: $("#v_edit_updator").val()
+                            };
+                            $.ajax({
+                                type: "post",
+                                url: "${ctxPath}/vegetable/update-vegetable",
+                                dataType: "json",
+                                contentType: "application/json;charset=utf-8",
+                                data: JSON.stringify(data),
+                                success: function (result) {
+                                    if ($.trim(result) == "true") {
+                                        swal({
+                                            title: "保存成功",
+                                            type: "success",
+                                            timer: 2000
+                                        });
+                                        $("#vegetableListTable").bootstrapTable("refresh", {
+                                            url: "${ctxPath}/vegetable/get-all-vegetable"
+                                        });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        },
+        "click #deleteTable": function (e, value, row, index) {
+            swal({
+                title: "提示",
+                text: "确认删除这条记录吗?",
+                type: "error",
+                showCancelButton: true, //是否显示取消按钮
+                confirmButtonColor: "#DD6B55",//确定按钮颜色
+                cancelButtonText: "取消",//取消按钮文本
+                confirmButtonText: "确认",//确定按钮文本
+            }).then(function (isConfirm) {
+                if (isConfirm == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "${ctxPath}/vegetable/delete-vegetable-by-id",
+                        dataType: "json",
+                        async: false,
+                        data: {
+                            id: row['id']
+                        },
+                        success: function (result) {
+                            if ($.trim(result) == "true") {
+                                swal({
+                                    title: "删除成功",
+                                    type: "success",
+                                    timer: 2000
+                                });
+                                $("#userListTable").bootstrapTable("refresh", {
+                                    url: "${ctxPath}/vegetable/get-all-vegetable"
+                                });
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    }
+
+    function loadFunction() {
+        $("#userListTable").html("正在拼命加载中.....");
+    }
+
+    function errorFunction() {
+        alert("加载失败");
+    }
+
+    //加减框
+    //加的效果
+    $(".add").click(function () {
+        var n = $(this).prev().val();
+        var num = parseInt(n) + 1;
+        if (num == 0) {
+            return;
+        }
+        $(this).prev().val(num);
+    });
+    //减的效果
+    $(".reduce").click(function () {
+        var n = $(this).next().val();
+        var num = parseInt(n) - 1;
+        if (num == 0) {
+            return;
+        }
+        $(this).next().val(num);
+    });
+
+    //构造用户列表表格
+    $(function () {
+        $("#vegetableListTable").bootstrapTable({
+            url: "${ctxPath}/vegetable/get-all-vegetable",
+            method: "post",
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            contentType: "application/json",//application/x-www-form-urlencoded请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            // sidePagination: "server",//服务端分页
+            toolbar: "#toolbar",
+            dataType: "json",
+            striped: true, // 是否显示行间隔色
+            search: true,
+            searchAlign: "right",
+            searchOnEnterKey: true,
+            buttonsAlign: "right",
+            showRefresh: true,
+            showColumns: true,
+            uniqueId: "id",
+            pageSize: "10",
+            pageNumber: "1",
+            pagination: true, // 是否分页
+            pageList: [5, 10, 20, 50, 100],
+            clickToSelect: true, //是否启用点击选中行
+            paginationPreText: "<<",
+            paginationNextText: ">>",
+            // showToggle: true,  显示异常，原因未知
+            locale: "zh-CN",
+            columns: [
+                {
+                    title: "全选",
+                    checkbox: true,
+                    align: "center"
+                },
+                {
+                    field: "id",
+                    visible: false,
+                    align: "center",
+                },
+                {
+                    field: "name",
+                    title: "名称",
+                    align: "center",
+                },
+                {
+                    field: "price",
+                    title: "单价",
+                    align: "center",
+                },
+                {
+                    field: "stock",
+                    title: "库存量",
+                    align: "center",
+                },
+                {
+                    field: "unit",
+                    title: "单位",
+                    align: "center",
+                },
+                {
+                    field: "shelfLife",
+                    title: "保质期(单位:天)",
+                    align: "center",
+                },
+                {
+                    field: "wholeSaler",
+                    title: "批发商",
+                    align: "center",
+                }, {
+                    field: "updator",
+                    title: "处理人",
+                    align: "center",
+                },
+                {
+                    field: "modifyTime",
+                    title: "处理时间",
+                    align: "center",
+                    width: 190
+                },
+                {
+                    title: "操作",
+                    width: 120,
+                    align: "center",
+                    valign: "middle",
+                    formatter: operateFormatter,
+                    events: operateEvents
+                }
+            ],
+            onLoadSuccess: function () {  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function () {  //加载失败时执行
+                console.info("加载数据失败");
+            }
+        });
+    });
+
+</script>
+
+
+<script src="${ctxPath}/static/plugins/jszip/dist/jszip.min.js"></script>
+<script src="${ctxPath}/static/plugins/pdfmake/build/pdfmake.min.js"></script>
+<script src="${ctxPath}/static/plugins/pdfmake/build/vfs_fonts.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="${ctxPath}/static/common/js/custom.min.js"></script>
+
+<script src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
+</body>
+</html>

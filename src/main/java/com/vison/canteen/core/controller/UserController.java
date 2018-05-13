@@ -75,7 +75,6 @@ public class UserController {
 
     @PostMapping("update-user")
     public Boolean updateUser(@RequestBody UserDTO userDTO) throws CanteenException {
-        log.warn(userDTO + "");
         return userService.updateUserById(userDTO);
     }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vison.canteen.core.mapper.GoodsMapper">
+
+    <resultMap id="BaseResultMap" type="com.vison.canteen.core.bean.PO.GoodsPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="stock" jdbcType="INTEGER" property="stock"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="shelf_life" jdbcType="INTEGER" property="shelfLife"/>
+        <result column="whole_saler" jdbcType="VARCHAR" property="wholeSaler"/>
+        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+
+    <select id="getAllGoods" resultMap="BaseResultMap">
+    SELECT *
+    FROM goods_info;
+    </select>
+
+    <select id="checkGoodsName" resultMap="BaseResultMap">
+        SELECT *
+        FROM goods_info
+        WHERE name = #{name};
+    </select>
+
+
+</mapper>

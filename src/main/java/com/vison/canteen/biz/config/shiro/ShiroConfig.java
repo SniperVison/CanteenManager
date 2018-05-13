@@ -78,6 +78,7 @@ public class ShiroConfig {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>() {
             {
 
+                put("/swagger/**","anon");
                 put("/static/**", "anon");
                 put("/swagger-ui.html", "anon");
                 put("/swagger-resources", "anon");

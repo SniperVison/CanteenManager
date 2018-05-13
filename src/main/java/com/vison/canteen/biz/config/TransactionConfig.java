@@ -39,6 +39,7 @@ public class TransactionConfig {
          * 在Service类添加 @Transactional 注解，方法为 Properties 的 key 正则匹配到的添加事务，不写 * 默认其他方法不添加事务
          * 注意：该配置具有强制性，拦截器只能生效一个，spring默认事务配置将失效
          */
+        transactionAttributes.setProperty("check*", "PROPAGATION_REQUIRED,-Exception");
         transactionAttributes.setProperty("add*", "PROPAGATION_REQUIRED,-Exception");
         transactionAttributes.setProperty("save*", "PROPAGATION_REQUIRED,-Exception");
         transactionAttributes.setProperty("insert*", "PROPAGATION_REQUIRED,-Exception");

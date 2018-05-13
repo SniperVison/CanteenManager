@@ -121,7 +121,7 @@
                 }, {
                     title: '操作',
                     formatter: function (value, row, index) {
-                        return "<a href='#' onclick='offline(\"" + row.id + "\",\"" + row.status + "\",\"" + row.username + "\")'>下线</a>";
+                        return "<a href='#' onclick='offline(\"" + row.id + "\",\"" + row.status + "\",\"" + row.username + "\")' style='color: blue'>强制下线</a>";
                     }
                 }],
             onLoadSuccess: function () {  //加载成功时执行

@@ -16,8 +16,6 @@
     <link href="${ctxPath}/static/plugins/iCheck/skins/flat/green.css" rel="stylesheet">
     <!--Bootstrap-table 表格样式-->
     <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <!-- bootstrap-daterangepicker 日期样式-->
-    <link href="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- Custom Theme Style 自定义样式-->
     <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
     <!--bootstrap-select-->
@@ -133,6 +131,9 @@
     //批量删除按钮点击事件
     $("#user_delete").click(function () {
         var selectData = $("#userListTable").bootstrapTable("getSelections");
+        if (selectData.length == 0 || selectData == null) {
+            return;
+        }
         var data = new Array();
         selectData.forEach(function (result) {
             data.push(result.id);
@@ -155,9 +156,15 @@
                     data: JSON.stringify(data),
                     success: function (result) {
                         if ($.trim(result) == "true") {
+                            swal({
+                                title: "保存成功",
+                                type: "success",
+                                timer: 2000
+                            });
                             $("#userListTable").bootstrapTable("refresh", {
                                 url: "${ctxPath}/user/get-all-user"
                             });
+                            window.location.reload();
                         }
                     }
                 });
@@ -399,29 +406,25 @@
     }
 
     //获取表格的全部内容  暂时没用
-    function getTableContent(id) {
-        var table = document.getElementById(id);
-        var data = [];
-        for (var i = 0, rows = table.rows.length; i < rows; i++) {
-            for (var j = 0, cells = table.rows[i].cells.length; j < cells; j++) {
-                if (!data[i]) {
-                    data[i] = new Array();
-                }
-                data[i][j] = table.rows[i].cells[j].innerHTML;
-            }
-        }
-        return data;
-    }
+    // function getTableContent(id) {
+    //     var table = document.getElementById(id);
+    //     var data = [];
+    //     for (var i = 0, rows = table.rows.length; i < rows; i++) {
+    //         for (var j = 0, cells = table.rows[i].cells.length; j < cells; j++) {
+    //             if (!data[i]) {
+    //                 data[i] = new Array();
+    //             }
+    //             data[i][j] = table.rows[i].cells[j].innerHTML;
+    //         }
+    //     }
+    //     return data;
+    // }
 
 
 </script>
 <!-- iCheck -->
 <script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
-<!-- DateJS -->
-<script src="${ctxPath}/static/plugins/DateJS/build/date.js"></script>
-<!-- bootstrap-daterangepicker -->
-<script src="${ctxPath}/static/plugins/moment/min/moment.min.js"></script>
-<script src="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+
 <!-- Custom Theme Scripts -->
 <script src="${ctxPath}/static/common/js/custom.min.js"></script>
 

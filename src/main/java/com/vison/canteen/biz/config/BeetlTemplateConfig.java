@@ -44,7 +44,10 @@ public class BeetlTemplateConfig {
     @Bean(name = "beetlViewResolver")
     public BeetlSpringViewResolver getBeetlSpringViewResolver(@Qualifier("beetlConfig") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
         BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
-        beetlSpringViewResolver.setPrefix("/templates/");
+        //官方文档建议在beetl.properties文件进行配置
+        // #classpath 根路径
+        //RESOURCE.root=/templates/
+//        beetlSpringViewResolver.setPrefix("/templates/**");
         beetlSpringViewResolver.setSuffix(".html");
         beetlSpringViewResolver.setContentType("text/html;charset=UTF-8");
         beetlSpringViewResolver.setOrder(0);
