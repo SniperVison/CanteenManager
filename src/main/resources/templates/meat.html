@@ -71,6 +71,8 @@
     <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/messages_zh.min.js"></script>
     <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
     <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script src="${ctxPath}/static/plugins/tableExport.jquery.plugin-1.3.0/bootstrap-table-export.js"></script>
+    <script src="${ctxPath}/static/plugins/tableExport.jquery.plugin-1.3.0/tableExport.min.js"></script>
 
 </head>
 <body class="nav-md">
@@ -647,6 +649,16 @@
             paginationNextText: ">>",
             // showToggle: true,  显示异常，原因未知
             locale: "zh-CN",
+            exportDataType: 'all',
+            showExport: true,  //是否显示导出按钮
+            buttonsAlign: "right",  //按钮位置
+            exportTypes: ['excel'],
+            undefinedText: '-', //当数据为 undefined 时显示的字符
+            Icons: 'glyphicon-export',
+            exportOptions: {
+                ignoreColumn: [0, 9], //忽略某一列的索引
+                fileName: '肉类数据表' + "-" + new Date().getTime(),//导出文件的名称
+            },
             columns: [
                 {
                     title: "全选",

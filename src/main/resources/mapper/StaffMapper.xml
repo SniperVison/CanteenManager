@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vison.canteen.core.mapper.StaffMapper">
+
+    <resultMap id="BaseResultMap" type="com.vison.canteen.core.bean.PO.StaffPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="work_number" jdbcType="BIGINT" property="workNumber"/>
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="induction" jdbcType="TIMESTAMP" property="induction"/>
+        <result column="work_unit" jdbcType="VARCHAR" property="workUnit"/>
+        <result column="position" jdbcType="VARCHAR" property="position"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+
+    <select id="getAllStaff" resultMap="BaseResultMap">
+    SELECT *
+    FROM staff_info;
+    </select>
+
+    <select id="checkStaffName" resultMap="BaseResultMap">
+        SELECT *
+        FROM staff_info
+        WHERE name = #{name};
+    </select>
+
+    <select id="checkStaffworkNumber" resultMap="BaseResultMap">
+        SELECT *
+        FROM staff_info
+        WHERE work_number = #{workNumber};
+    </select>
+
+
+</mapper>
