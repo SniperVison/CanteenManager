@@ -1,5 +1,6 @@
 package com.vison.canteen.core.bean.PO;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.vison.canteen.biz.bean.BasePO;
 import lombok.Data;
@@ -13,10 +14,12 @@ public class UserRolePO extends BasePO<UserRolePO> {
     /**
      * 用户id
      */
-    private Long userInfoId;
+    @TableField("uid")
+    private Long userId;
     /**
      * 角色id
      */
+    @TableField("rid")
     private Long roleId;
 
 }

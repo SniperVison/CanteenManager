@@ -33,6 +33,10 @@ public class UserPO extends BasePO<UserPO> {
      */
     private String password;
     /**
+     * 一卡通账号
+     */
+    private Long card;
+    /**
      * 加密的盐
      */
     private String salt;

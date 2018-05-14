@@ -8,7 +8,7 @@
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-            <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>高校食堂管理系统</span></a>
+            <a href="${ctxPath}/main" class="site_title"><i class="fa fa-paw"></i> <span>高校食堂管理系统</span></a>
         </div>
 
         <div class="clearfix"></div>
@@ -41,16 +41,16 @@
                 <ul class="nav side-menu">
                     <li><a href="${ctxPath}/main"><i class="fa fa-home"></i> 系统主页 </a></li>
 
-                    <%if(vison.hasRole("admin")){%>
+                    <%if(vison.hasRole("管理员")){%>
                     <li><a><i class="fa fa-gear "></i> 系统管理 <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a id="usermanagement" href="${ctxPath}/user/list">用户管理</a></li>
-                            <li><a id="rolemanagement" href="${ctxPath}/role/list">角色管理</a></li>
+                            <!--<li><a id="rolemanagement" href="${ctxPath}/role/list">角色管理</a></li>-->
                         </ul>
                     </li>
                     <%}%>
 
-                    <%if(vison.hasRole("admin")){%>
+                    <%if(vison.hasRole("管理员")){%>
                     <li><a><i class="fa fa-skyatlas" aria-hidden="true"></i> 系统监控 <span
                             class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
@@ -69,9 +69,12 @@
                             <li><a href="${ctxPath}/staff/">员工详情</a></li>
                         </ul>
                     </li>
-
-                    <li><a><i class="fa fa-money"></i> 个人消费 </a></li>
-
+                    <%if(vison.hasRole("管理员")){%>
+                    <li><a href="${ctxPath}/comsume/"><i class="fa fa-money"></i> 食堂消费记录 </a></li>
+                    <%}%>
+                    <% else { %>
+                    <li><a href="${ctxPath}/comsume/"><i class="fa fa-money"></i> 个人消费记录 </a></li>
+                    <%}%>
                     <li><a><i class="fa fa-send-o" aria-hidden="true"></i> 网络资源 <span
                             class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

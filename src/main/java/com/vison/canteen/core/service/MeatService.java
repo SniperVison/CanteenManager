@@ -24,4 +24,5 @@ public interface MeatService extends IService<MeatPO> {
 
     Boolean deleteMeatByIds(List<Long> idList);
 
+    Integer getLeft();
 }

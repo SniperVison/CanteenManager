@@ -24,4 +24,5 @@ public interface VegetableService extends IService<VegetablePO> {
 
     Boolean deleteVegetableByIds(List<Long> idList);
 
+    Integer getLeft();
 }

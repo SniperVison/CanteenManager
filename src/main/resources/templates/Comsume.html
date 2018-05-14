@@ -10,44 +10,6 @@
     <meta name="author" content="Vison">
 
     <title>高校食堂管理系统</title>
-
-    <style>
-        .gw_num {
-            border: 1px solid #dbdbdb;
-            width: 110px;
-            line-height: 26px;
-            overflow: hidden;
-        }
-
-        .gw_num em {
-            display: block;
-            height: 26px;
-            width: 26px;
-            float: left;
-            color: #7A7979;
-            border-right: 1px solid #dbdbdb;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .gw_num .num {
-            display: block;
-            float: left;
-            text-align: center;
-            width: 52px;
-            font-style: normal;
-            font-size: 14px;
-            line-height: 24px;
-            border: 0;
-        }
-
-        .gw_num em.add {
-            float: right;
-            border-right: 0;
-            border-left: 1px solid #dbdbdb;
-        }
-    </style>
-
     <!-- Bootstrap -->
     <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome 字体样式-->
@@ -65,6 +27,8 @@
     <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
     <!-- iCheck -->
     <script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
+    <!--bootstrap-select-->
+    <link href="${ctxPath}/static/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
     <script type="text/javascript" src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/jquery.validate.min.js"></script>
     <script type="text/javascript" src="${ctxPath}/static/plugins/jquery-validate/additional-methods.min.js"></script>
@@ -73,8 +37,8 @@
     <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
     <script src="${ctxPath}/static/plugins/tableExport.jquery.plugin-1.3.0/bootstrap-table-export.js"></script>
     <script src="${ctxPath}/static/plugins/tableExport.jquery.plugin-1.3.0/tableExport.min.js"></script>
-
 </head>
+
 <body class="nav-md">
 <div class="container body">
     <div class="main_container">
@@ -88,18 +52,18 @@
         %>
         <!--网页主体内容-->
         <div class="right_col" role="main">
-
             <% if(vison.hasRole("管理员")){%>
             <div id="toolbar" class="btn-group">
-                <button id="g_add" type="button" class="btn btn-default">
+                <button id="c_add" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
                 </button>
-                <button id="g_delete" type="button" class="btn btn-default">
+                <button id="c_delete" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
                 </button>
             </div>
             <%}%>
-            <table id="goodsListTable" class="table table-hover"></table>
+            <table id="comsumeListTable" class="table table-hover"></table>
+
         </div>
 
         <!--底部-->
@@ -108,9 +72,8 @@
         %>
 
     </div>
-
     <!--新增模态框-->
-    <div id="g_addModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
+    <div id="c_addModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -120,78 +83,49 @@
                 </div>
                 <div class="modal-body">
                     <!--  模态框内容，我在此处添加一个表单 -->
-                    <form class="form-horizontal" role="form" id="g_addForm">
+                    <form class="form-horizontal" role="form" id="c_addForm">
                         <div class="form-group">
-                            <label for="gname" class="col-sm-2 control-label col-sm-offset-2">名称:</label>
+                            <label for="card" class="col-sm-2 control-label col-sm-offset-2">一卡通账号:</label>
                             <div class="col-sm-4">
-                                <input type="text" id="gname" name="gname" class="form-control" required/>
+                                <input type="text" id="card" name="card" class="form-control" required/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="gprice" class="col-sm-2 control-label col-sm-offset-2">单价:</label>
+                            <label for="money" class="col-sm-2 control-label col-sm-offset-2">金额:</label>
                             <div class="col-sm-4">
                                 <div class="input-group">
                                     <span class="input-group-addon">￥</span>
-                                    <input id="gprice" name="gprice" type="text" class="form-control" required>
+                                    <input id="money" name="money" type="text" class="form-control" required>
                                     <span class="input-group-addon">元</span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="gstock" class="col-sm-2 control-label col-sm-offset-2">库存量:</label>
+                            <label for="cstatus" class="col-sm-2 control-label col-sm-offset-2">类型:</label>
                             <div class="col-sm-4">
-                                <div class="gw_num">
-                                    <em class="reduce">-</em>
-                                    <input id="gstock" name="gstock" type="text" value="1" class="num"
-                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
-                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required/>
-                                    <em class="add">+</em>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="gunit" class="col-sm-2 control-label col-sm-offset-2">单位:</label>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input id="gunit" name="gunit" type="text" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="gshelflife" class="col-sm-2 control-label col-sm-offset-2">保质期:</label>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input id="gshelflife" name="gshelflife" type="text" class="form-control"
-                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
-                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required>
-                                    <span class="input-group-addon">天</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="gwholesaler" class="col-sm-2 control-label col-sm-offset-2">批发商:</label>
-                            <div class="col-sm-4">
-                                <input id="gwholesaler" name="gwholesaler" type="text" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="gupdator" class="col-sm-2 control-label col-sm-offset-2">处理人:</label>
-                            <div class="col-sm-4">
-                                <input id="gupdator" name="gupdator" type="text" class="form-control" required>
+                                <select class="selectpicker form-control " id="cstatus" name="cstatus">
+                                    <option value="消费" data-content="<span class='badge badge-pill badge-success'
+                                        style='background-color: #28a745; color: #fff;'>消费</span>">消费
+                                    </option>
+                                    <option value="存款" data-content="<span class='badge badge-pill badge-warning'
+                                        style='background-color: #ffc107; color: #212529;;'>存款</span>">
+                                        存款
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
-                    <button id="g_add_save" type="button" class="btn btn-success">保存</button>
+                    <button id="c_add_save" type="button" class="btn btn-success">保存</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
     <!--编辑模态框-->
-    <div id="g_editModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
+    <div id="c_editModal" class="modal fade" tabindex="-1" role="dialog" style="text-align: center">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -201,76 +135,43 @@
                 </div>
                 <div class="modal-body">
                     <!--  模态框内容，我在此处添加一个表单 -->
-                    <form class="form-horizontal" role="form" id="g_editForm">
+                    <form class="form-horizontal" role="form" id="c_editForm">
                         <div class="form-group">
-                            <label for="g_edit_name" class="col-sm-2 control-label col-sm-offset-2">名称:</label>
+                            <label for="c_edit_card" class="col-sm-2 control-label col-sm-offset-2">一卡通账号:</label>
                             <div class="col-sm-4">
-                                <input type="text" id="g_edit_name" name="g_edit_name" class="form-control" required/>
+                                <input type="text" id="c_edit_card" name="c_edit_card" class="form-control" required/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="g_edit_price" class="col-sm-2 control-label col-sm-offset-2">单价:</label>
+                            <label for="c_edit_money" class="col-sm-2 control-label col-sm-offset-2">金额:</label>
                             <div class="col-sm-4">
                                 <div class="input-group">
                                     <span class="input-group-addon">￥</span>
-                                    <input id="g_edit_price" name="g_edit_price" type="text" class="form-control"
+                                    <input id="c_edit_money" name="c_edit_money" type="text" class="form-control"
                                            required>
                                     <span class="input-group-addon">元</span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="g_edit_stock" class="col-sm-2 control-label col-sm-offset-2">库存量:</label>
+                            <label for="c_edit_status" class="col-sm-2 control-label col-sm-offset-2">类型:</label>
                             <div class="col-sm-4">
-                                <div class="gw_num">
-                                    <em class="reduce">-</em>
-                                    <input id="g_edit_stock" name="g_edit_stock" type="text" value="1" class="num"
-                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
-                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required/>
-                                    <em class="add">+</em>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="g_edit_unit" class="col-sm-2 control-label col-sm-offset-2">单位:</label>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input id="g_edit_unit" name="g_edit_unit" type="text" class="form-control"
-                                           required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="g_edit_shelflife" class="col-sm-2 control-label col-sm-offset-2">保质期:</label>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input id="g_edit_shelflife" name="g_edit_shelflife" type="text"
-                                           class="form-control"
-                                           onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
-                                           onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " required>
-                                    <span class="input-group-addon">天</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="g_edit_wholesaler" class="col-sm-2 control-label col-sm-offset-2">批发商:</label>
-                            <div class="col-sm-4">
-                                <input id="g_edit_wholesaler" name="g_edit_wholesaler" type="text" class="form-control"
-                                       required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="g_edit_updator" class="col-sm-2 control-label col-sm-offset-2">处理人:</label>
-                            <div class="col-sm-4">
-                                <input id="g_edit_updator" name="g_edit_updator" type="text" class="form-control"
-                                       required>
+                                <select class="selectpicker form-control " id="c_edit_status" name="c_edit_status">
+                                    <option value="消费" data-content="<span class='badge badge-pill badge-success'
+                                        style='background-color: #28a745; color: #fff;'>消费</span>">消费
+                                    </option>
+                                    <option value="存款" data-content="<span class='badge badge-pill badge-warning'
+                                        style='background-color: #ffc107; color: #212529;;'>存款</span>">
+                                        存款
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
-                    <button id="g_edit_save" type="button" class="btn btn-success">保存</button>
+                    <button id="c_edit_save" type="button" class="btn btn-success">保存</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -278,114 +179,67 @@
 
 
 </div>
+
 <script type="text/javascript">
 
-    $("#g_addForm").validate({
+    $("#c_addForm").validate({
         rules: {
-            gname: {
+            card: {
                 required: true,
-                remote: {
-                    url: "${ctxPath}/goods/check-goods-name",
-                    type: "post",
-                    dateType: "json",
-                    async: false,
-                    data: {
-                        name: $("#gname").val()
-                    }
-                }
             },
-            gprice: {
+            money: {
                 required: true,
                 number: true
             },
-            gstock: {
+            cstatus: {
                 required: true,
-                digits: true
-            },
-            gunit: "required",
-            gshelflife: "required",
-            gwholesaler: "required",
-            gupdator: "required",
+            }
         },
         messages:
             {
-                gname: {
-                    required: "请输入粮油杂货名称",
-                    remote: "该粮油杂货数据已存在"
+                card: {
+                    required: "请输入一卡通账号",
                 },
-                gprice: {
-                    required: "请输入单价",
-                    number: "请输入正确的价钱"
+                money: {
+                    required: "请输入金额",
+                    number: "请输入正确的金额"
                 },
-                gstock: {
-                    required: "请输入库存数量",
-                    digits: "请输入整数"
-                },
-                gunit: {
-                    required: "请输入单位"
-                },
-                gshelflife: {
-                    required: "请输入保质期"
-                },
-                gwholesaler: {
-                    required: "请输入批发商名称"
-                },
-                gupdator: {
-                    required: "请输入处理人名称"
+                cstatus: {
+                    required: "请输入类型",
                 }
             }
     });
 
 
-    $("#g_editForm").validate({
+    $("#c_editForm").validate({
         rules: {
-            g_edit_name: "required",
-            g_edit_price: {
+            c_edit_card: "required",
+            c_edit_money: {
                 required: true,
                 number: true
             },
-
-            g_edit_stock: {
-                required: true,
-                digits: true
-            },
-            g_edit_unit: "required",
-            g_edit_shelflife: "required",
-            g_edit_wholesaler: "required",
-            g_edit_updator: "required",
+            c_edit_status: {
+                required: true
+            }
         },
         messages:
             {
-                g_edit_name: {
-                    required: "请输入粮油杂货名称"
+                c_edit_card: {
+                    required: "请输入一卡通账号"
                 },
-                g_edit_price: {
-                    required: "请输入单价",
-                    number: "请输入正确的价钱"
+                c_edit_money: {
+                    required: "请输入金额",
+                    number: "请输入正确的金额"
                 },
-                g_edit_stock: {
-                    required: "请输入库存数量",
-                    digits: "请输入整数"
-                },
-                g_edit_unit: {
-                    required: "请输入单位"
-                },
-                g_edit_shelflife: {
-                    required: "请输入保质期"
-                },
-                g_edit_wholesaler: {
-                    required: "请输入批发商名称"
-                },
-                g_edit_updator: {
-                    required: "请输入处理人名称"
+                c_edit_status: {
+                    required: "请输入类型"
                 }
             }
     });
-
 
     //批量删除按钮点击事件
-    $("#g_delete").click(function () {
-        var selectData = $("#goodsListTable").bootstrapTable("getSelections");
+    $("#c_delete").click(function () {
+        var selectData = $("#comsumeListTable").bootstrapTable("getSelections");
         if (selectData.length == 0 || selectData == null) {
             return;
         }
@@ -405,7 +259,7 @@
             if (isConfirm == true) {
                 $.ajax({
                     type: "post",
-                    url: "${ctxPath}/goods/delete-goods-by-ids",
+                    url: "${ctxPath}/comsume/delete-comsume-by-ids",
                     dataType: "json",
                     contentType: "application/json;charset=utf-8",
                     data: JSON.stringify(data),
@@ -416,8 +270,8 @@
                                 type: "success",
                                 timer: 2000
                             });
-                            $("#goodsListTable").bootstrapTable("refresh", {
-                                url: "${ctxPath}/goods/get-all-goods"
+                            $("#comsumeListTable").bootstrapTable("refresh", {
+                                url: "${ctxPath}/comsume/get-all-comsume"
                             });
                             window.location.reload();
                         }
@@ -428,19 +282,14 @@
     });
 
     //新增按钮事件
-    $("#g_add").click(function () {
-        $("#g_addModal").modal("show");
-        $("#g_add_save").click(function () {
-            if ($("#g_addForm").valid()) {
-                console.log("新增校验成功");
+    $("#c_add").click(function () {
+        $("#c_addModal").modal("show");
+        $("#c_add_save").click(function () {
+            if ($("#c_addForm").valid()) {
                 var data = {
-                    name: $("#gname").val(),
-                    price: $("#gprice").val(),
-                    stock: $("#gstock").val(),
-                    unit: $("#gunit").val(),
-                    shelfLife: $("#gshelflife").val(),
-                    wholeSaler: $("#gwholesaler").val(),
-                    updator: $("#gupdator").val()
+                    card: $("#card").val(),
+                    money: $("#money").val(),
+                    status: $("#cstatus").val()
                 };
                 swal({
                     title: "提示",
@@ -453,7 +302,7 @@
                 }).then(function (isConfirm) {
                     if (isConfirm == true) {
                         $.ajax({
-                            url: "${ctxPath}/goods/add",
+                            url: "${ctxPath}/comsume/add",
                             type: "post",
                             contentType: "application/json;charset=utf-8",
                             data: JSON.stringify(data),
@@ -464,8 +313,8 @@
                                         type: "success",
                                         timer: 2000
                                     });
-                                    $("#goodsListTable").bootstrapTable("refresh", {
-                                        url: "${ctxPath}/goods/get-all-goods"
+                                    $("#comsumeListTable").bootstrapTable("refresh", {
+                                        url: "${ctxPath}/comsume/get-all-comsume"
                                     });
                                     window.location.reload();
                                 }
@@ -477,6 +326,11 @@
         });
     });
 
+    //状态栏格式化
+    function statusFormatter(value, row, index) {
+        if (value == '消费') return '<span class="badge badge-pill badge-success" style="background-color: #28a745; color: #fff;">消费</span>';
+        if (value == '存款') return '<span class="badge badge-pill badge-warning" style="background-color: #ffc107; color: #212529;;">存款</span>';
+    }
 
     //操作栏的格式化
     function operateFormatter(value, row, index) {
@@ -496,19 +350,19 @@
         }, "click #editTable": function (e, value, row, index) {
             // 初始化模态框并赋值
             $().ready(function () {
-                $("#g_editModal").modal("show");
-                $("input[id=g_edit_name]").val(row['name']);
-                $("input[id=g_edit_name]").attr("readOnly", "readOnly");
-                $("input[id=g_edit_price]").val(row['price']) == "" ? null : $("input[id=g_edit_price]").val(row['price']);
-                $("input[id=g_edit_stock]").val(row['stock']) == "" ? null : $("input[id=g_edit_stock]").val(row['stock']);
-                $("input[id=g_edit_unit]").val(row['unit']) == "" ? null : $("input[id=g_edit_unit]").val(row['unit']);
-                $("input[id=g_edit_shelflife]").val(row['shelfLife']) == "" ? null : $("input[id=g_edit_shelflife]").val(row['shelfLife']);
-                $("input[id=g_edit_wholesaler]").val(row['wholeSaler']) == "" ? null : $("input[id=g_edit_wholesaler]").val(row['wholeSaler']);
-                $("input[id=g_edit_updator]").val(row['updator']) == "" ? null : $("input[id=g_edit_updator]").val(row['updator']);
+                $("#c_editModal").modal("show");
+                $("input[id=c_edit_card]").val(row['card']);
+                $("input[id=c_edit_money]").val(row['money']) == "" ? null : $("input[id=c_edit_money]").val(row['money']);
+                $("#c_edit_status").selectpicker('val', row['status']);
+                $('#c_edit_status').selectpicker('refresh');
             });
-            $("#g_edit_save").click(function () {
-                if ($("#g_editForm").valid()) {
-                    console.log("编辑校验成功");
+                $("#c_edit_status").on('change', function (e) {
+                    $("#c_edit_status").selectpicker('val', this.value);
+                    $('#c_edit_status').selectpicker('refresh');
+                });
+
+                $("#c_edit_save").click(function () {
+                if ($("#c_editForm").valid()) {
                     swal({
                         title: "提示",
                         text: "是否确认修改这条记录?",
@@ -521,17 +375,13 @@
                         if (isConfirm == true) {
                             var data = {
                                 id: row["id"],
-                                name: $("#g_edit_name").val(),
-                                price: $("#g_edit_price").val(),
-                                stock: $("#g_edit_stock").val(),
-                                unit: $("#g_edit_stock").val(),
-                                shelfLife: $("#g_edit_shelflife").val(),
-                                wholeSaler: $("#g_edit_wholesaler").val(),
-                                updator: $("#g_edit_updator").val()
+                                card: $("#c_edit_card").val(),
+                                money: $("#c_edit_money").val(),
+                                status: $("#cstatus").selectpicker('val')
                             };
                             $.ajax({
                                 type: "post",
-                                url: "${ctxPath}/goods/update-goods",
+                                url: "${ctxPath}/comsume/update-comsume",
                                 dataType: "json",
                                 contentType: "application/json;charset=utf-8",
                                 data: JSON.stringify(data),
@@ -542,8 +392,8 @@
                                             type: "success",
                                             timer: 2000
                                         });
-                                        $("#goodsListTable").bootstrapTable("refresh", {
-                                            url: "${ctxPath}/goods/get-all-goods"
+                                        $("#comsumeListTable").bootstrapTable("refresh", {
+                                            url: "${ctxPath}/comsume/get-all-comsume"
                                         });
                                         window.location.reload();
                                     }
@@ -567,7 +417,7 @@
                 if (isConfirm == true) {
                     $.ajax({
                         type: "post",
-                        url: "${ctxPath}/goods/delete-goods-by-id",
+                        url: "${ctxPath}/comsume/delete-comsume-by-id",
                         dataType: "json",
                         async: false,
                         data: {
@@ -580,8 +430,8 @@
                                     type: "success",
                                     timer: 2000
                                 });
-                                $("#goodsListTable").bootstrapTable("refresh", {
-                                    url: "${ctxPath}/goods/get-all-goods"
+                                $("#comsumeListTable").bootstrapTable("refresh", {
+                                    url: "${ctxPath}/comsume/get-all-comsume"
                                 });
                                 window.location.reload();
                             }
@@ -592,38 +442,11 @@
         }
     }
 
-    function loadFunction() {
-        $("#goodsListTable").html("正在拼命加载中.....");
-    }
-
-    function errorFunction() {
-        alert("加载失败");
-    }
-
-    //加减框
-    //加的效果
-    $(".add").click(function () {
-        var n = $(this).prev().val();
-        var num = parseInt(n) + 1;
-        if (num == 0) {
-            return;
-        }
-        $(this).prev().val(num);
-    });
-    //减的效果
-    $(".reduce").click(function () {
-        var n = $(this).next().val();
-        var num = parseInt(n) - 1;
-        if (num == 0) {
-            return;
-        }
-        $(this).next().val(num);
-    });
-
-    //构造用户列表表格
+    <%if(vison.hasRole("管理员")){%>
+    //构造列表表格
     $(function () {
-        $("#goodsListTable").bootstrapTable({
-            url: "${ctxPath}/goods/get-all-goods",
+        $("#comsumeListTable").bootstrapTable({
+            url: "${ctxPath}/comsume/get-all-comsume",
             method: "post",
             cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
             striped: true,  //表格显示条纹，默认为false
@@ -655,72 +478,51 @@
             undefinedText: '-', //当数据为 undefined 时显示的字符
             Icons: 'glyphicon-export',
             exportOptions: {
-                ignoreColumn: [0, 9], //忽略某一列的索引
-                fileName: '杂货类数据表' + "-" + new Date().getTime(),//导出文件的名称
+                ignoreColumn: [0, 4], //忽略某一列的索引
+                fileName: '消费类数据表' + "-" + new Date().getTime(),//导出文件的名称
             },
             columns: [
-            <% if(vison.hasRole("管理员")){%>
-            {
+                {
                     title: "全选",
                     checkbox: true,
                     align: "center"
-            },
-         <%}%>
+                },
+
                 {
                     field: "id",
                     visible: false,
                     align: "center",
                 },
                 {
-                    field: "name",
-                    title: "名称",
+                    field: "card",
+                    title: "一卡通账号",
                     align: "center",
                 },
                 {
-                    field: "price",
-                    title: "单价",
+                    field: "money",
+                    title: "金额",
                     align: "center",
                 },
                 {
-                    field: "stock",
-                    title: "库存量",
+                    field: "status",
+                    title: "类型",
                     align: "center",
-                },
-                {
-                    field: "unit",
-                    title: "单位",
-                    align: "center",
-                },
-                {
-                    field: "shelfLife",
-                    title: "保质期(单位:天)",
-                    align: "center",
-                },
-                {
-                    field: "wholeSaler",
-                    title: "批发商",
-                    align: "center",
-                }, {
-                    field: "updator",
-                    title: "处理人",
-                    align: "center",
+                    formatter: statusFormatter
                 },
                 {
                     field: "modifyTime",
                     title: "处理时间",
                     align: "center",
                     width: 190
-                }
-                <% if(vison.hasRole("管理员")){%>
-                 , {
+                },
+                {
                     title: "操作",
                     width: 120,
                     align: "center",
                     valign: "middle",
                     formatter: operateFormatter,
                     events: operateEvents
-            }
-        <%}%>
+                }
             ],
             onLoadSuccess: function () {  //加载成功时执行
                 console.info("加载成功");
@@ -730,13 +532,97 @@
             }
         });
     });
+     <%}%>
+
+
+    <%if(vison.hasRole("普通用户")){%>
+    $(function () {
+        $("#comsumeListTable").bootstrapTable({
+            url: "${ctxPath}/comsume/get-comsume-by-card",
+            method: "post",
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            contentType: "application/json",//application/x-www-form-urlencoded请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            // sidePagination: "server",//服务端分页
+            toolbar: "#toolbar",
+            dataType: "json",
+            striped: true, // 是否显示行间隔色
+            search: true,
+            searchAlign: "right",
+            searchOnEnterKey: true,
+            buttonsAlign: "right",
+            showRefresh: true,
+            showColumns: true,
+            uniqueId: "id",
+            pageSize: "10",
+            pageNumber: "1",
+            pagination: true, // 是否分页
+            pageList: [5, 10, 20, 50, 100],
+            clickToSelect: true, //是否启用点击选中行
+            paginationPreText: "<<",
+            paginationNextText: ">>",
+            // showToggle: true,  显示异常，原因未知
+            locale: "zh-CN",
+            exportDataType: 'all',
+            showExport: true,  //是否显示导出按钮
+            buttonsAlign: "right",  //按钮位置
+            exportTypes: ['excel'],
+            undefinedText: '-', //当数据为 undefined 时显示的字符
+            Icons: 'glyphicon-export',
+            exportOptions: {
+                ignoreColumn: [0, 4], //忽略某一列的索引
+                fileName: '消费类数据表' + "-" + new Date().getTime(),//导出文件的名称
+            },
+            columns: [
+                {
+                    field: "id",
+                    visible: false,
+                    align: "center",
+                },
+                {
+                    field: "card",
+                    title: "一卡通账号",
+                    align: "center",
+                },
+                {
+                    field: "money",
+                    title: "金额",
+                    align: "center",
+                },
+                {
+                    field: "status",
+                    title: "类型",
+                    align: "center",
+                    formatter: statusFormatter
+                },
+                {
+                    field: "modifyTime",
+                    title: "处理时间",
+                    align: "center",
+                    width: 190
+                }
+            ],
+            onLoadSuccess: function () {  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function () {  //加载失败时执行
+                console.info("加载数据失败");
+            }
+        });
+    });
+    <%}%>
+    function loadFunction() {
+        $("#goodsListTable").html("正在拼命加载中.....");
+    }
+
+    function errorFunction() {
+        alert("加载失败");
+    }
 
 </script>
 
-
-<script src="${ctxPath}/static/plugins/jszip/dist/jszip.min.js"></script>
-<script src="${ctxPath}/static/plugins/pdfmake/build/pdfmake.min.js"></script>
-<script src="${ctxPath}/static/plugins/pdfmake/build/vfs_fonts.js"></script>
+<script src="${ctxPath}/static/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="${ctxPath}/static/plugins/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
 <!-- Custom Theme Scripts -->
 <script src="${ctxPath}/static/common/js/custom.min.js"></script>
 

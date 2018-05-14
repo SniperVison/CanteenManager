@@ -72,11 +72,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserPO> impleme
     @Override
     public List<UserVO> getAllUser() {
         List<UserPO> userPOList = baseMapper.getAllUser();
+        log.error("" + userPOList);
         List<UserVO> userVOList = userPOList.parallelStream().map(e -> {
             UserVO userVO = new UserVO();
             BeanUtil.copyProperties(e, userVO);
             userVO.setId(LongUtils.LongToString(e.getId()));
             userVO.setUserRole(UserRole.ADMIN);
+            userVO.setCard(e.getCard().toString());
             userVO.setCreateTime(e.getCreateTime());
             return userVO;
         }).collect(Collectors.toList());
@@ -84,11 +86,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserPO> impleme
     }
 
     @Override
-    public Boolean addUser(UserPO userPO) {
+    public Long addUser(UserPO userPO) {
 
-        return super.insert(userPO);
-//        Long id = userPO.getId();
-
+        super.insert(userPO);
+        return userPO.getId();
     }
 
     @Override
@@ -157,7 +158,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserPO> impleme
         super.updateById(userPO);
         UserInfoPO userInfoPO = userInfoService.getUserInfoByUserId(userId);
         if (userInfoPO == null) {
-            userInfoPO=new UserInfoPO();
+            userInfoPO = new UserInfoPO();
             BeanUtil.copyProperties(userInfoDTO, userInfoPO);
             userInfoPO.setUserId(userId);
             return userInfoService.insert(userInfoPO);

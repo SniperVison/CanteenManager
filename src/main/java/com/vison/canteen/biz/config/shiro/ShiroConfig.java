@@ -87,10 +87,8 @@ public class ShiroConfig {
                 put("/druid/**", "anon");
                 put("/kaptcha/**", "anon");
                 put("/ajax-login", "anon");
-                put("/user/list", "roles[admin]");
                 put("/templates/**", "authc");
                 put("/logout", "logout");
-                put("/addAuthc", "perms[权限添加]");
                 put("/**", "authc");
             }
         };

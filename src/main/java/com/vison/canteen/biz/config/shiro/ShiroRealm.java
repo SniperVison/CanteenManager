@@ -1,5 +1,6 @@
 package com.vison.canteen.biz.config.shiro;
 
+import com.vison.canteen.biz.enums.UserRole;
 import com.vison.canteen.biz.enums.UserStatus;
 import com.vison.canteen.core.bean.PO.UserPO;
 import com.vison.canteen.core.service.RoleService;
@@ -14,9 +15,6 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /*
  * @author huangwenshen 2018/3/31 15:43
@@ -40,7 +38,7 @@ public class ShiroRealm extends AuthorizingRealm {
         Object password = String.valueOf(token.getPassword());
         UserPO userPO = userService.getByUsername(username);
         if (userPO == null) {
-            log.error("账户不存在");
+            log.info("账户不存在");
             throw new UnknownAccountException("用户名或密码错误！");
         } else if (userPO != null
                 && !userPO.getPassword().equals(password)
@@ -72,15 +70,14 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.error("进入授权校验了");
         String principal = (String) principals.getPrimaryPrincipal();
-//        UserPO userInfoPO = userService.getByUsername(principal);
         //把principals放session中 key=userId value=principals
-        SecurityUtils.getSubject().getSession().setAttribute("username",SecurityUtils.getSubject().getPrincipals());
-        Set<String> roles = new HashSet<>();
-        roles.add("user");
-        if ("abc".equals(principal)) {
-            roles.add("admin");
+        SecurityUtils.getSubject().getSession().setAttribute("username", SecurityUtils.getSubject().getPrincipals());
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        if ("vison".equals(principal)) {
+            info.addRole(UserRole.ADMIN.getTypeName());
+        } else {
+            info.addRole(UserRole.USER.getTypeName());
         }
-        SimpleAuthorizationInfo info=new SimpleAuthorizationInfo(roles);
         return info;
     }
 

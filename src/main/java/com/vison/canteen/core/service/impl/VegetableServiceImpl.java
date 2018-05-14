@@ -66,4 +66,9 @@ public class VegetableServiceImpl extends BaseServiceImpl<VegetableMapper, Veget
         return super.deleteBatchIds(idList);
     }
 
+    @Override
+    public Integer getLeft() {
+        return baseMapper.getLeft();
+    }
+
 }

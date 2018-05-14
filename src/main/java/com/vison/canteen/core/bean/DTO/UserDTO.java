@@ -20,6 +20,8 @@ public class UserDTO {
 
     private String email;
 
+    private String card;
+
     private UserStatus status;
 
     private UserRole userRole;

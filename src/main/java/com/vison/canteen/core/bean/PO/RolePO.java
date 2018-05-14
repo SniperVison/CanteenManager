@@ -3,6 +3,7 @@ package com.vison.canteen.core.bean.PO;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.vison.canteen.biz.bean.BasePO;
+import com.vison.canteen.biz.enums.UserRole;
 import lombok.Data;
 
 /**
@@ -13,6 +14,9 @@ import lombok.Data;
 @Data
 @TableName("sys_role")
 public class RolePO extends BasePO<RolePO> {
+
+    @TableField("type")
+    private UserRole userRole;
     /**
      * 角色名称
      */

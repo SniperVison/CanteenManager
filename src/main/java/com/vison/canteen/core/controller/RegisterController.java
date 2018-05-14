@@ -1,9 +1,12 @@
 package com.vison.canteen.core.controller;
 
 import com.vison.canteen.biz.enums.UserStatus;
+import com.vison.canteen.biz.util.LongUtils;
 import com.vison.canteen.biz.util.MD5Utils;
 import com.vison.canteen.core.bean.PO.UserPO;
+import com.vison.canteen.core.bean.PO.UserRolePO;
 import com.vison.canteen.core.exception.CanteenException;
+import com.vison.canteen.core.service.UserRoleService;
 import com.vison.canteen.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,20 +32,26 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @PostMapping("sign-up")
     public Map<String, Object> submitRegister(@RequestParam("username") String username,
                                               @RequestParam("password") String password,
-                                              @RequestParam("email") String email) throws CanteenException {
+                                              @RequestParam("email") String email,
+                                              @RequestParam("card") String card) throws CanteenException {
         LinkedHashMap<String, Object> resultMap = new LinkedHashMap<>();
         UserPO userPO = userService.getByUsername(username);
+        Long userId = null;
         if (userPO == null) {
             UserPO user = new UserPO();
             user.setEmail(email);
             user.setUsername(username);
             user.setPassword(MD5Utils.encrypt(username, password));
             user.setStatus(UserStatus.CERTIFIED);
-            Boolean flag = userService.addUser(user);
-            if (flag) {
+            user.setCard(LongUtils.StringToLong(card));
+            userId = userService.addUser(user);
+            if (userId != null) {
                 resultMap.put("status", 200);
                 resultMap.put("message", "注册成功");
             } else {
@@ -55,6 +64,14 @@ public class RegisterController {
             resultMap.put("status", 500);
             resultMap.put("message", "用户名已存在");
         }
+        UserRolePO userRolePO = new UserRolePO();
+        if ("vison".equals(username)) {
+            userRolePO.setRoleId(1001L);
+        } else {
+            userRolePO.setRoleId(1002L);
+        }
+        userRolePO.setUserId(userId);
+        userRoleService.insert(userRolePO);
         return resultMap;
     }
 

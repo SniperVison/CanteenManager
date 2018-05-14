@@ -89,7 +89,7 @@
         <!--网页主体内容-->
         <div class="right_col" role="main">
 
-
+            <%if(vison.hasRole("管理员")){%>
             <div id="toolbar" class="btn-group">
                 <button id="m_add" type="button" class="btn btn-default">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
@@ -98,6 +98,7 @@
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
                 </button>
             </div>
+            <%}%>
             <table id="meatListTable" class="table table-hover"></table>
         </div>
 
@@ -660,11 +661,13 @@
                 fileName: '肉类数据表' + "-" + new Date().getTime(),//导出文件的名称
             },
             columns: [
-                {
+            <% if(vison.hasRole("管理员")){%>
+            {
                     title: "全选",
                     checkbox: true,
                     align: "center"
-                },
+            },
+        <%}%>
                 {
                     field: "id",
                     visible: false,
@@ -709,8 +712,9 @@
                     title: "处理时间",
                     align: "center",
                     width: 190
-                },
-                {
+                }
+                <% if(vison.hasRole("管理员")){%>
+                , {
                     title: "操作",
                     width: 120,
                     align: "center",
@@ -718,14 +722,17 @@
                     formatter: operateFormatter,
                     events: operateEvents
                 }
+            <%}%>
             ],
             onLoadSuccess: function () {  //加载成功时执行
                 console.info("加载成功");
-            },
+            }
+            ,
             onLoadError: function () {  //加载失败时执行
                 console.info("加载数据失败");
             }
-        });
+        })
+        ;
     });
 
 </script>

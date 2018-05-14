@@ -110,6 +110,10 @@
                                placeholder="密码" required=""/>
                     </div>
                     <div>
+                        <input id="signupCard" name="signupCard" type="text" class="form-control" placeholder="一卡通账号"
+                               required=""/>
+                    </div>
+                    <div>
                         <input id="signupEmail" name="signupEmail" type="email" class="form-control" placeholder="邮箱"
                                required=""/>
                     </div>
@@ -211,6 +215,9 @@
                     signupEmail: {
                         required: true,
                         email: true
+                    },
+                    signupCard: {
+                        required: true
                     }
                 },
                 messages: {
@@ -225,6 +232,9 @@
                     signupEmail: {
                         required: "请输入邮箱",
                         email: "请输入正确的邮箱"
+                    },
+                    signupCard: {
+                        required: "请输入一卡通账号"
                     }
                 }
             });
@@ -279,6 +289,7 @@
             var username = $("#signupUsername").val();
             var password = $("#signupPassword").val();
             var email = $("#signupEmail").val();
+            var card = $("#signupCard").val();
             // $("#ajaxRegister").addClass(disabled);
             $.ajax({
                 url: "${ctxPath}/register/sign-up",
@@ -288,7 +299,8 @@
                 data: {
                     username: username,
                     password: password,
-                    email: email
+                    email: email,
+                    card: card
                 },
                 success: function (result) {
                     if (result.status == "200") {

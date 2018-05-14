@@ -5,7 +5,7 @@
     <select id="selectRoleListByUserId" resultType="java.lang.Long">
         SELECT role_id
         FROM sys_user_role
-        WHERE user_info_id = #{userId};
+        WHERE uid = #{userId};
     </select>
 
 </mapper>

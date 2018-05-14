@@ -82,6 +82,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="ucard" class="col-sm-2 control-label col-sm-offset-2">一卡通账号</label>
+                                <div class="col-sm-4">
+                                    <input type="text" id="ucard" name="ucard" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="ustatus" class="col-sm-2 control-label col-sm-offset-2">状态</label>
                                 <div class="col-sm-4">
                                     <select class="selectpicker form-control " id="ustatus" name="ustatus">
@@ -95,15 +101,15 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="urole" class="col-sm-2 control-label col-sm-offset-2">角色</label>
-                                <div class="col-sm-4">
-                                    <select class="selectpicker form-control " id="urole" name="urole">
-                                        <option value="管理员">管理员</option>
-                                        <option value="普通用户">普通用户</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label for="urole" class="col-sm-2 control-label col-sm-offset-2">角色</label>-->
+                            <!--<div class="col-sm-4">-->
+                            <!--<select class="selectpicker form-control " id="urole" name="urole">-->
+                            <!--<option value="管理员">管理员</option>-->
+                            <!--<option value="普通用户">普通用户</option>-->
+                            <!--</select>-->
+                            <!--</div>-->
+                            <!--</div>-->
                         </form>
                     </div>
 
@@ -218,10 +224,11 @@
                 $("input[id=uname]").attr("readOnly", "readOnly");
                 $("input[id=unickname]").val(row['name']);
                 $("input[id=unickname]").attr("readOnly", "readOnly");
+                $("input[id=ucard]").val(row['card']);
                 $("#ustatus").selectpicker('val', row['status']);
-                $("#urole").selectpicker('val', row['userRole']);
+                // $("#urole").selectpicker('val', row['userRole']);
                 $('#ustatus').selectpicker('refresh');
-                $('#urole').selectpicker('refresh');
+                // $('#urole').selectpicker('refresh');
             });
 
             $("#ustatus").on('change', function (e) {
@@ -229,10 +236,10 @@
                 $('#ustatus').selectpicker('refresh');
             });
 
-            $("#urole").on('change', function (e) {
-                $("#urole").selectpicker('val', this.value);
-                $('#urole').selectpicker('refresh');
-            });
+            // $("#urole").on('change', function (e) {
+            //     $("#urole").selectpicker('val', this.value);
+            //     $('#urole').selectpicker('refresh');
+            // });
 
             $("#updateSaveRecord").click(function () {
                 swal({
@@ -357,6 +364,11 @@
                     align: "center",
                 },
                 {
+                    field: "card",
+                    title: "一卡通账号",
+                    align: "center"
+                },
+                {
                     field: "createTime",
                     title: "创建时间",
                     align: "center",
@@ -373,12 +385,12 @@
                     title: "状态",
                     align: "center",
                     formatter: statusFormatter
-                }, {
+                }, /*{
                     field: "userRole",
                     title: "角色",
                     align: "center",
                     formatter: roleFormatter
-                },
+                },*/
                 {
                     title: "操作",
                     width: 120,

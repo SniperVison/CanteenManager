@@ -64,5 +64,10 @@ public class MeatServiceImpl extends BaseServiceImpl<MeatMapper, MeatPO> impleme
     public Boolean deleteMeatByIds(List<Long> idList) {
         return super.deleteBatchIds(idList);
     }
-    
+
+    @Override
+    public Integer getLeft() {
+        return baseMapper.getLeft();
+    }
+
 }

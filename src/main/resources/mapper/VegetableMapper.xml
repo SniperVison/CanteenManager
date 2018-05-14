@@ -25,6 +25,10 @@
         FROM vegetable_info
         WHERE name = #{name};
     </select>
+    <select id="getLeft" resultType="java.lang.Integer">
+        SELECT SUM(stock)
+        FROM vegetable_info;
+    </select>
 
 
 </mapper>

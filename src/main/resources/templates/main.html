@@ -15,32 +15,13 @@
     <link href="${ctxPath}/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="${ctxPath}/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="${ctxPath}/static/plugins/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="${ctxPath}/static/plugins/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-progressbar -->
-    <link href="${ctxPath}/static/plugins/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"
-          rel="stylesheet">
-    <!--Bootstrap-table 表格样式-->
-    <link href="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <!-- JQVMap -->
-    <link href="${ctxPath}/static/plugins/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
-    <!-- bootstrap-daterangepicker -->
-    <link href="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!--sweetAlert-->
     <link href="${ctxPath}/static/plugins/sweetalert2/sweetalert2.css" rel="stylesheet">
-
     <!-- Custom Theme Style -->
     <link href="${ctxPath}/static/common/css/custom.min.css" rel="stylesheet">
-
-
     <script type="text/javascript" src="${ctxPath}/static/plugins/jquery/jquery-3.3.1.min.js"></script>
     <script src="${ctxPath}/static/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="${ctxPath}/static/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
     <script type="text/javascript" src="${ctxPath}/static/plugins/sweetalert2/sweetalert2.js"></script>
-
 
 </head>
 
@@ -55,186 +36,111 @@
         <%
         include("common/top.html"){}
         %>
-        <!--网页主题内容-->
-        <!--page content-->
+        <!--网页主体内容-->
         <div class="right_col" role="main">
-            <!--  top tiles-->
-            <!--<div class="row tile_count">-->
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-users"></i> 用户总数</span>-->
-                    <!--<div class="count">${userNums}</div>-->
-                    <!--<span class="count_bottom"><i class="green">4% </i> 最近七天注册数量</span>-->
-                <!--</div>-->
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <strong>欢迎进入管理系统!</strong>
+            </div>
+            <!--top tiles-->
+            <div class="row tile_count">
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-users"></i> 用户总数</span>
+                    <div class="count">${userNums}</div>
+                    <span class="count_bottom"><i class="green">4% </i> 最近七天注册数量</span>
+                </div>
 
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-user"></i> 访问总量</span>-->
-                    <!--<div class="count">1235</div>-->
-                    <!--<span class="count_bottom"><i class="green"><i-->
-                            <!--class="fa fa-sort-asc"></i>3% </i> 最近七天访问总量</span>-->
-                <!--</div>-->
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> 访问总量</span>
+                    <div class="count">1235</div>
+                    <span class="count_bottom"><i class="green"><i
+                            class="fa fa-sort-asc"></i>3% </i> 最近七天访问总量</span>
+                </div>
 
-                <!--&lt;!&ndash;           <%if(vison.hasRole("user")){%>-->
-                           <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                               <!--<span class="count_top"><i class="fa fa-jpy" aria-hidden="true"></i> 消费总金额 </span>-->
-                               <!--<div class="count green">2,500</div>-->
-                               <!--<span class="count_bottom"><i class="green"><i-->
-                                       <!--class="fa fa-sort-asc"></i>34% </i> 最近七天消费总额 </span>-->
-                           <!--</div>-->
-                           <!--<%}%>&ndash;&gt;-->
+                <%if(vison.hasRole("普通用户")){%>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-jpy" aria-hidden="true"></i> 消费总金额 </span>
+                    <div class="count green">2,500</div>
+                    <span class="count_bottom"><i class="green"><i
+                            class="fa fa-sort-asc"></i>34% </i> 最近七天消费总额 </span>
+                </div>
+                <%}%>
 
-                <!--<%if(vison.hasRole("admin")){%>-->
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-line-chart" aria-hidden="true"></i> 食堂日均就餐人数 </span>-->
-                    <!--<div class="count green">2,500</div>-->
-                    <!--<span class="count_bottom"><i class="green"><i-->
-                            <!--class="fa fa-sort-asc"></i>34% </i> 最近七天就餐人数 </span>-->
-                <!--</div>-->
-                <!--<%}%>-->
+                <%if(vison.hasRole("管理员")){%>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-line-chart" aria-hidden="true"></i> 食堂日均就餐人数 </span>
+                    <div class="count green">2,500</div>
+                    <span class="count_bottom"><i class="green"><i
+                            class="fa fa-sort-asc"></i>34% </i> 最近七天就餐人数 </span>
+                </div>
+                <%}%>
 
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-jpy"></i> 食堂财政支出 </span>-->
-                    <!--<div class="count green">4,567</div>-->
-                    <!--<span class="count_bottom"><i class="red"><i-->
-                            <!--class="fa fa-sort-desc"></i>12% </i> 最近七天支出</span>-->
-                <!--</div>-->
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-jpy"></i> 食堂财政收入</span>-->
-                    <!--<div class="count red">2,315</div>-->
-                    <!--<span class="count_bottom"><i class="green"><i-->
-                            <!--class="fa fa-sort-asc"></i>34% </i> 最近七天收入</span>-->
-                <!--</div>-->
-                <!--<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">-->
-                    <!--<span class="count_top"><i class="fa fa-frown-o"></i> 食材剩余总量 </span>-->
-                    <!--<div class="count">7,325</div>-->
-                    <!--<span class="count_bottom"><i class="green"><i-->
-                            <!--class="fa fa-sort-asc"></i>34% </i> 最近七天剩余</span>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;  /top tiles&ndash;&gt;-->
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-jpy"></i> 食堂财政支出 </span>
+                    <div class="count green">4,567</div>
+                    <span class="count_bottom"><i class="red"><i
+                            class="fa fa-sort-desc"></i>12% </i> 最近七天支出</span>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-jpy"></i> 食堂财政收入</span>
+                    <div class="count red">2,315</div>
+                    <span class="count_bottom"><i class="green"><i
+                            class="fa fa-sort-asc"></i>34% </i> 最近七天收入</span>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-frown-o"></i> 食材剩余总量 </span>
+                    <div class="count">${foodLeft}</div>
+                    <span class="count_bottom"><i class="green"><i
+                            class="fa fa-sort-asc"></i>34% </i> 最近七天剩余</span>
+                </div>
+            </div>
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                </ol>
 
-            <!--<div class="row">-->
-                <!--<div class="col-md-12 col-sm-12 col-xs-12">-->
-                    <!--<div class="dashboard_graph">-->
-                        <!--<div class="row">-->
-                            <!--<div class="col-md-12 col-sm-12 col-xs-12">-->
-                                <!--<div class="dashboard_graph x_panel">-->
-                                    <!--<div class="row x_title">-->
-                                        <!--<div class="col-md-6">-->
-                                            <!--<h3>网络流量-->
-                                                <!--<small></small>-->
-                                            <!--</h3>-->
-                                        <!--</div>-->
-                                        <!--<div class="col-md-6">-->
-                                            <!--<div id="reportrange" class="pull-right"-->
-                                                 <!--style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">-->
-                                                <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
-                                                <!--<span>12 30, 2014 - 1 28, 2015</span> <b class="caret"></b>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="x_content">-->
-                                        <!--<div class="demo-container" style="height:250px">-->
-                                            <!--<div id="chart_plot_03" class="demo-placeholder"></div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash;  <div class="col-md-3 col-sm-3 col-xs-12 bg-white">-->
-                              <!--<div class="x_title">-->
-                                  <!--<h2>食堂进货排行榜</h2>-->
-                                  <!--<div class="clearfix"></div>-->
-                              <!--</div>-->
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="${ctxPath}/static/foodImg/1.png" alt="菜肴">
+                    </div>
+                    <div class="item">
+                        <img src="${ctxPath}/static/foodImg/2.png" alt="菜肴">
+                    </div>
+                    <div class="item">
+                        <img src="${ctxPath}/static/foodImg/3.png" alt="菜肴">
+                    </div>
+                </div>
 
-                              <!--<div class="col-md-12 col-sm-12 col-xs-6">-->
-                                  <!--<div>-->
-                                      <!--<p>西红柿</p>-->
-                                      <!--<div class="">-->
-                                          <!--<div class="progress progress_sm" style="width: 76%;">-->
-                                              <!--<div class="progress-bar bg-green" role="progressbar"-->
-                                                   <!--data-transitiongoal="80"></div>-->
-                                          <!--</div>-->
-                                      <!--</div>-->
-                                  <!--</div>-->
-                                  <!--<div>-->
-                                      <!--<p>猪肉</p>-->
-                                      <!--<div class="">-->
-                                          <!--<div class="progress progress_sm" style="width: 76%;">-->
-                                              <!--<div class="progress-bar bg-green" role="progressbar"-->
-                                                   <!--data-transitiongoal="60"></div>-->
-                                          <!--</div>-->
-                                      <!--</div>-->
-                                  <!--</div>-->
-                              <!--</div>-->
-                              <!--<div class="col-md-12 col-sm-12 col-xs-6">-->
-                                  <!--<div>-->
-                                      <!--<p>土豆</p>-->
-                                      <!--<div class="">-->
-                                          <!--<div class="progress progress_sm" style="width: 76%;">-->
-                                              <!--<div class="progress-bar bg-green" role="progressbar"-->
-                                                   <!--data-transitiongoal="40"></div>-->
-                                          <!--</div>-->
-                                      <!--</div>-->
-                                  <!--</div>-->
-                                  <!--<div>-->
-                                      <!--<p>牛肉</p>-->
-                                      <!--<div class="">-->
-                                          <!--<div class="progress progress_sm" style="width: 76%;">-->
-                                              <!--<div class="progress-bar bg-green" role="progressbar"-->
-                                                   <!--data-transitiongoal="50"></div>-->
-                                          <!--</div>-->
-                                      <!--</div>-->
-                                  <!--</div>-->
-                              <!--</div>-->
-                          <!--</div>&ndash;&gt;-->
-                        <!--<div class="clearfix"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<br/>-->
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
         </div>
-        <!-- /page content -->
-        <!--底部-->
+        <!--  /top tiles-->
+
         <%
         include("common/footer.html"){}
         %>
 
     </div>
 </div>
-
-<!-- FastClick -->
-<script src="${ctxPath}/static/plugins/fastclick/lib/fastclick.js"></script>
-<!-- NProgress -->
-<script src="${ctxPath}/static/plugins/nprogress/nprogress.css"></script>
-<!-- Chart.js -->
-<script src="${ctxPath}/static/plugins/Chart.js/dist/Chart.min.js"></script>
-<!-- gauge.js -->
-<script src="${ctxPath}/static/plugins/gauge.js/dist/gauge.min.js"></script>
-<!-- bootstrap-progressbar -->
-<script src="${ctxPath}/static/plugins/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-<!-- iCheck -->
-<script src="${ctxPath}/static/plugins/iCheck/icheck.min.js"></script>
-<!-- Skycons -->
-<script src="${ctxPath}/static/plugins/skycons/skycons.js"></script>
-<!-- Flot -->
-<script src="${ctxPath}/static/plugins/Flot/jquery.flot.js"></script>
-<script src="${ctxPath}/static/plugins/Flot/jquery.flot.pie.js"></script>
-<script src="${ctxPath}/static/plugins/Flot/jquery.flot.time.js"></script>
-<script src="${ctxPath}/static/plugins/Flot/jquery.flot.stack.js"></script>
-<script src="${ctxPath}/static/plugins/Flot/jquery.flot.resize.js"></script>
-<!-- Flot plugins -->
-<script src="${ctxPath}/static/plugins/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-<script src="${ctxPath}/static/plugins/flot-spline/js/jquery.flot.spline.min.js"></script>
-<script src="${ctxPath}/static/plugins/flot.curvedlines/curvedLines.js"></script>
-<!-- DateJS -->
-<script src="${ctxPath}/static/plugins/DateJS/build/date.js"></script>
-<!-- JQVMap -->
-<script src="${ctxPath}/static/plugins/jqvmap/dist/jquery.vmap.min.js"></script>
-<script src="${ctxPath}/static/plugins/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-<script src="${ctxPath}/static/plugins/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
-<!-- bootstrap-daterangepicker -->
-<script src="${ctxPath}/static/plugins/moment/min/moment.min.js"></script>
-<script src="${ctxPath}/static/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript">
+    $('.carousel').carousel({
+        interval: 5000
+    })
+</script>
 
 <!-- Custom Theme Scripts -->
 <script src="${ctxPath}/static/common/js/custom.min.js"></script>

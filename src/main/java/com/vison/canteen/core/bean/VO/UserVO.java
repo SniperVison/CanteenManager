@@ -23,6 +23,8 @@ public class UserVO extends BaseVO {
 
     private String email;
 
+    private String card;
+
     private UserStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

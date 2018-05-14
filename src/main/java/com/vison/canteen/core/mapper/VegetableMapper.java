@@ -15,4 +15,6 @@ public interface VegetableMapper extends BaseMapper<VegetablePO> {
 
     VegetablePO checkVegetableName(@Param("name") String name);
 
+    Integer getLeft();
+
 }

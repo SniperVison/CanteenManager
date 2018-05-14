@@ -34,7 +34,7 @@ public interface UserService extends IService<UserPO> {
 
     List<UserVO> getAllUser();
 
-    Boolean addUser(UserPO userPO);
+    Long addUser(UserPO userPO);
 
     Boolean updateLoginTime(String username);
 

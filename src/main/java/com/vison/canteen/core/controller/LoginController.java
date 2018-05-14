@@ -2,7 +2,10 @@ package com.vison.canteen.core.controller;
 
 import com.vison.canteen.biz.util.MD5Utils;
 import com.vison.canteen.core.bean.PO.UserPO;
+import com.vison.canteen.core.service.GoodsService;
+import com.vison.canteen.core.service.MeatService;
 import com.vison.canteen.core.service.UserService;
+import com.vison.canteen.core.service.VegetableService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -31,6 +34,15 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    VegetableService vegetableService;
+
+    @Autowired
+    MeatService meatService;
+
+    @Autowired
+    GoodsService goodsService;
+
     //默认启动页
     @GetMapping("/")
     public ModelAndView defaultView() {
@@ -47,6 +59,9 @@ public class LoginController {
         request.setAttribute("user", user);
         Integer userNums = userService.getUserCount();
         request.setAttribute("userNums", userNums);
+        Integer vegetableLeft = vegetableService.getLeft();
+        Integer meatLeft = meatService.getLeft();
+        request.setAttribute("foodLeft", vegetableLeft + meatLeft);
         model.setViewName("main");
         return model;
     }
@@ -60,7 +75,7 @@ public class LoginController {
         //没有登录认证，执行登录
         if (!currentUser.isAuthenticated()) {
             String newPassword = MD5Utils.encrypt(username, password);
-            UsernamePasswordToken token = new UsernamePasswordToken(username,newPassword);
+            UsernamePasswordToken token = new UsernamePasswordToken(username, newPassword);
             token.setRememberMe(rememberMe);
             try {
                 currentUser.login(token);

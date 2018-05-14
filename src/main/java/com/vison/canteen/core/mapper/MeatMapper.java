@@ -14,4 +14,6 @@ public interface MeatMapper extends BaseMapper<MeatPO> {
 
     MeatPO checkMeatName(String name);
 
+    Integer getLeft();
+
 }
