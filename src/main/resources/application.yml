@@ -4,6 +4,7 @@ server:
 
 # 图片上传路径
 tmpLocation: E:/image
+#tmpLocation: /root/image
 
 # 日志
 logging:
@@ -18,7 +19,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/canteen_manager?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
     password: root
     username: root
-
 
  # 连接池配置
     initialSize: 1
@@ -48,7 +48,7 @@ redis:
   port: ${REDIS_PORT:6379}
   host: ${REDIS_HOST:111.230.128.208}
   database: ${REDIS_DATABASE:2}
-  password: ${REDIS_PASSWORD:123456}
+  password: ${REDIS_PASSWORD:1234}
   block-when-exhausted: ${REDIS_BLOCK:true}
   jmx-enabled: ${REDIS_JMX_ENABLE:true}
   min-idle: ${REDIS_MIN_IDLE:0}

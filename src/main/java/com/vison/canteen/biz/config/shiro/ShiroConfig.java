@@ -1,7 +1,6 @@
 
 package com.vison.canteen.biz.config.shiro;
 
-import com.vison.canteen.core.service.PermissionInitService;
 import com.vison.canteen.core.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -48,9 +47,6 @@ public class ShiroConfig {
 
     @Autowired
     RedisCacheManager redisCacheManager;
-
-    @Autowired
-    PermissionInitService permissionInitService;
 
     private static final int SEVENDAY = 604800;
 

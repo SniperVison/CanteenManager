@@ -141,6 +141,9 @@ public class UserController {
             //把路径插入数据库
             user.setAvatarUrl(fileName);
             userService.updateById(user);
+            UserPO userPO = userService.selectById(user.getId());
+            HttpSession session = request.getSession();
+            session.setAttribute("user",userPO);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {

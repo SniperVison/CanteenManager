@@ -72,7 +72,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserPO> impleme
     @Override
     public List<UserVO> getAllUser() {
         List<UserPO> userPOList = baseMapper.getAllUser();
-        log.error("" + userPOList);
         List<UserVO> userVOList = userPOList.parallelStream().map(e -> {
             UserVO userVO = new UserVO();
             BeanUtil.copyProperties(e, userVO);

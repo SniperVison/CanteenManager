@@ -143,39 +143,51 @@
 
 
     function offline(id, status, username) {
-        if (status == "0") {
-            swal({
-                title: "提示",
-                text: "该用户已是离线状态！！",
-                type: "warning",
-                timer: 2000
-            });
-            return;
-        }
-        if (username =="${user.username}") {
-            location.href = "${ctxPath}/logout";
-        }
-        $.post("${ctxPath}/session/forceLogout", {"id": id}, function (r) {
-            if (r.code == 200) {
-                swal({
-                    title: "提示",
-                    text: "该用户已强制下线！",
-                    type: "success",
-                    timer: 2000
-                });
-                $("#onlineTable").bootstrapTable("refresh", {
-                    url: "${ctxPath}/session/list"
-                });
-            } else {
-                swal({
-                    title: "提示",
-                    text: r.msg,
-                    type: "error",
-                    timer: 2000
-                });
+        swal({
+            title: "警告",
+            text: "是否确认强制踢出该用户",
+            type:"warning",
+            showCancelButton: true, //是否显示取消按钮
+            confirmButtonColor: "#DD6B55",//确定按钮颜色
+            cancelButtonText: "取消",//取消按钮文本
+            confirmButtonText: "确认"//确定按钮文本
+        }).then(function (isConfirm) {
+            if (isConfirm == true) {
+                if (status == "0") {
+                    swal({
+                        title: "提示",
+                        text: "该用户已是离线状态！！",
+                        type: "warning",
+                        timer: 2000
+                    });
+                    return;
+                }
+                if (username == "${user.username}") {
+                    location.href = "${ctxPath}/logout";
+                }
+                $.post("${ctxPath}/session/forceLogout", {"id": id}, function (r) {
+                    if (r.code == 200) {
+                        swal({
+                            title: "提示",
+                            text: "该用户已强制下线！",
+                            type: "success",
+                            timer: 2000
+                        });
+                        $("#onlineTable").bootstrapTable("refresh", {
+                            url: "${ctxPath}/session/list"
+                        });
+                    } else {
+                        swal({
+                            title: "提示",
+                            text: r.msg,
+                            type: "error",
+                            timer: 2000
+                        });
+                    }
+                }, "json");
             }
-        }, "json");
-    }
+        })
+    };
 </script>
 
 <!-- Custom Theme Scripts -->

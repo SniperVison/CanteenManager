@@ -77,4 +77,10 @@ public class ComsumeServiceImpl extends BaseServiceImpl<ComsumeMapper, ComsumePO
     public Boolean deleteComsumeByIds(List<Long> idList) {
         return super.deleteBatchIds(idList);
     }
+
+    @Override
+    public Double getComsumeMoney(Long card) {
+        return baseMapper.getComsumeMoney(card);
+    }
+
 }

@@ -21,6 +21,11 @@
         FROM comsume_info
         WHERE card = #{card};
     </select>
+    <select id="getComsumeMoney" resultType="java.lang.Double">
+        SELECT SUM(money)
+        FROM  comsume_info
+        WHERE card = #{card};
+    </select>
 
 
 </mapper>

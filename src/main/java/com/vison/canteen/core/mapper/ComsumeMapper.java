@@ -13,4 +13,8 @@ public interface ComsumeMapper extends BaseMapper<ComsumePO> {
     List<ComsumePO> getAllComsume();
 
     List<ComsumePO> getComsumeByCard(@Param("card") Long card);
+
+    Double getComsumeMoney(@Param("card") Long card);
+
+
 }

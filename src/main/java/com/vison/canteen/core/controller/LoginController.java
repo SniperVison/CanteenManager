@@ -2,10 +2,7 @@ package com.vison.canteen.core.controller;
 
 import com.vison.canteen.biz.util.MD5Utils;
 import com.vison.canteen.core.bean.PO.UserPO;
-import com.vison.canteen.core.service.GoodsService;
-import com.vison.canteen.core.service.MeatService;
-import com.vison.canteen.core.service.UserService;
-import com.vison.canteen.core.service.VegetableService;
+import com.vison.canteen.core.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -43,6 +40,9 @@ public class LoginController {
     @Autowired
     GoodsService goodsService;
 
+    @Autowired
+    ComsumeService comsumeService;
+
     //默认启动页
     @GetMapping("/")
     public ModelAndView defaultView() {
@@ -59,6 +59,8 @@ public class LoginController {
         request.setAttribute("user", user);
         Integer userNums = userService.getUserCount();
         request.setAttribute("userNums", userNums);
+        Double comsumeMoney=comsumeService.getComsumeMoney(user.getCard());
+        request.setAttribute("comsumeMoney",comsumeMoney);
         Integer vegetableLeft = vegetableService.getLeft();
         Integer meatLeft = meatService.getLeft();
         request.setAttribute("foodLeft", vegetableLeft + meatLeft);

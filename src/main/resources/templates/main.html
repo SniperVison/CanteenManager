@@ -61,7 +61,7 @@
                 <%if(vison.hasRole("普通用户")){%>
                 <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                     <span class="count_top"><i class="fa fa-jpy" aria-hidden="true"></i> 消费总金额 </span>
-                    <div class="count green">2,500</div>
+                    <div class="count green">${comsumeMoney}</div>
                     <span class="count_bottom"><i class="green"><i
                             class="fa fa-sort-asc"></i>34% </i> 最近七天消费总额 </span>
                 </div>
@@ -75,7 +75,7 @@
                             class="fa fa-sort-asc"></i>34% </i> 最近七天就餐人数 </span>
                 </div>
                 <%}%>
-
+                <%if(vison.hasRole("管理员")){%>
                 <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                     <span class="count_top"><i class="fa fa-jpy"></i> 食堂财政支出 </span>
                     <div class="count green">4,567</div>
@@ -88,6 +88,7 @@
                     <span class="count_bottom"><i class="green"><i
                             class="fa fa-sort-asc"></i>34% </i> 最近七天收入</span>
                 </div>
+                <%}%>
                 <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                     <span class="count_top"><i class="fa fa-frown-o"></i> 食材剩余总量 </span>
                     <div class="count">${foodLeft}</div>

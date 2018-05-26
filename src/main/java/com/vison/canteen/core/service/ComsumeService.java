@@ -25,4 +25,6 @@ public interface ComsumeService extends IService<ComsumePO> {
 
     Boolean deleteComsumeByIds(List<Long> idList);
 
+    Double getComsumeMoney(Long card);
+
 }

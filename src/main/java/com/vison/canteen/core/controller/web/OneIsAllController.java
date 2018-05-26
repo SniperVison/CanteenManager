@@ -71,7 +71,6 @@ public class OneIsAllController {
         }
     }
 
-
     @PostMapping("essay-detail")
     public ResponseDTO getEssayDetail(String itemId, String id) {
         try {
